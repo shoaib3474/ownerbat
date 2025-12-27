@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
 
 import '../../../models/address_model.dart';
+import '../../../services/location_service.dart';
 import '../../../services/settings_service.dart';
 import '../../global_widgets/block_button_widget.dart';
 import '../../global_widgets/text_field_widget.dart';
@@ -23,11 +24,13 @@ import '../controllers/salon_addresses_form_controller.dart';
 class AddressPickerController extends GetxController {
   late Address address;
   late String apiKey;
+  late LocationService _locationService;
 
   final Rx<gmap.LatLng> selectedLatLng =
       const gmap.LatLng(28.6139, 77.2090).obs;
 
   final RxString formattedAddress = ''.obs;
+  final RxBool isLoading = false.obs;
   Timer? _debounce;
 
   @override
@@ -36,11 +39,30 @@ class AddressPickerController extends GetxController {
 
     address = Get.arguments['address'] as Address;
     apiKey = Get.find<SettingsService>().setting.value.googleMapsKey ?? '';
+    _locationService = Get.find<LocationService>();
 
-    selectedLatLng.value = gmap.LatLng(
-      address.latitude ?? 28.6139,
-      address.longitude ?? 77.2090,
-    );
+    // Initialize with existing address or default
+    double lat = 28.6139;
+    double lng = 77.2090;
+    
+    if (address.latitude != null && address.latitude > 0) {
+      lat = address.latitude;
+    }
+    if (address.longitude != null && address.longitude > 0) {
+      lng = address.longitude;
+    }
+    
+    selectedLatLng.value = gmap.LatLng(lat, lng);
+    
+    // Set formatted address if it exists
+    if (address.address.isNotEmpty) {
+      formattedAddress.value = address.address;
+    }
+  }
+
+  /// Check and request location permission
+  Future<bool> checkLocationPermission() async {
+    return await _locationService.checkAndRequestLocationPermission();
   }
 
   /// 🔍 AUTOCOMPLETE
@@ -78,27 +100,37 @@ class AddressPickerController extends GetxController {
     address
       ..latitude = loc['lat']
       ..longitude = loc['lng']
-      ..address = formattedAddress.value;
+      ..address = formattedAddress.value
+      ..description = formattedAddress.value; // Ensure description is set
   }
 
   /// 🔁 REVERSE GEOCODE
   Future<void> reverseGeocode(gmap.LatLng latLng) async {
-    final url =
-        'https://maps.googleapis.com/maps/api/geocode/json'
-        '?latlng=${latLng.latitude},${latLng.longitude}&key=$apiKey';
+    isLoading.value = true;
+    try {
+      final url =
+          'https://maps.googleapis.com/maps/api/geocode/json'
+          '?latlng=${latLng.latitude},${latLng.longitude}&key=$apiKey';
 
-    final res = await http.get(Uri.parse(url));
-    final body = json.decode(res.body);
+      final res = await http.get(Uri.parse(url));
+      final body = json.decode(res.body);
 
-    if (body['results'] != null && body['results'].isNotEmpty) {
-      formattedAddress.value = body['results'][0]['formatted_address'];
-      address.address = formattedAddress.value;
+      if (body['results'] != null && body['results'].isNotEmpty) {
+        final formattedAddr = body['results'][0]['formatted_address'] ?? 'Unknown Location';
+        formattedAddress.value = formattedAddr;
+        
+        address
+          ..latitude = latLng.latitude
+          ..longitude = latLng.longitude
+          ..address = formattedAddr
+          ..description = formattedAddr; // Ensure description is set
+      }
+    } finally {
+      isLoading.value = false;
     }
-
-    address
-      ..latitude = latLng.latitude
-      ..longitude = latLng.longitude;
   }
+
+  /// 🔁 REVERSE GEOCODE (OLD - KEPT FOR REFERENCE)
 
   @override
   void onClose() {

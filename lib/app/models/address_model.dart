@@ -79,10 +79,11 @@ class Address extends Model {
   }
 
   LatLng getLatLng() {
-    if (this.isUnknown()) {
-      return LatLng(38.806103, 52.4964453);
+    if (isUnknown()) {
+      // Default center point - user will select actual location
+      return const LatLng(28.6139, 77.2090); // New Delhi, India
     } else {
-      return LatLng(this.latitude, this.longitude);
+      return LatLng(latitude, longitude);
     }
   }
 
@@ -97,26 +98,26 @@ class Address extends Model {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.hasData) {
-      data['id'] = this.id;
+    if (hasData) {
+      data['id'] = id;
     }
-    if (this._description != null) {
-      data['description'] = this._description;
+    if (_description != null) {
+      data['description'] = _description;
     }
-    if (this._address != null) {
-      data['address'] = this._address;
+    if (_address != null) {
+      data['address'] = _address;
     }
-    if (this._latitude != null) {
-      data['latitude'] = this._latitude;
+    if (_latitude != null) {
+      data['latitude'] = _latitude;
     }
-    if (this._longitude != null) {
-      data['longitude'] = this._longitude;
+    if (_longitude != null) {
+      data['longitude'] = _longitude;
     }
-    if (this._isDefault != null) {
-      data['default'] = this._isDefault;
+    if (_isDefault != null) {
+      data['default'] = _isDefault;
     }
-    if (this._userId != null) {
-      data['user_id'] = this._userId;
+    if (_userId != null) {
+      data['user_id'] = _userId;
     }
     return data;
   }
