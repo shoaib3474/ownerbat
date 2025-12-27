@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "569749359022",
+    "project_id": "uoons-e",
+    "storage_bucket": "uoons-e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569749359022:android:837fddc743cda8e3daa03f",
+        "android_client_info": {
+          "package_name": "Com.example.blinkit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJsb1sXawCISm3IdYOzNzk82K5sJC0Ato"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569749359022:android:db4d353c0d62d881daa03f",
+        "android_client_info": {
+          "package_name": "com.example.ownerbat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJsb1sXawCISm3IdYOzNzk82K5sJC0Ato"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569749359022:android:70fa10485b175627daa03f",
+        "android_client_info": {
+          "package_name": "com.example.uoons"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJsb1sXawCISm3IdYOzNzk82K5sJC0Ato"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
