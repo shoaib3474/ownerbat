@@ -19,7 +19,14 @@ class Address extends Model {
   bool? _isDefault;
   String? _userId;
 
-  Address({String? id, String? description, String? address, double? latitude, double? longitude, String? userId, bool? isDefault}) {
+  Address(
+      {String? id,
+      String? description,
+      String? address,
+      double? latitude,
+      double? longitude,
+      String? userId,
+      bool? isDefault}) {
     _userId = userId;
     _longitude = longitude;
     _latitude = latitude;
@@ -43,7 +50,6 @@ class Address extends Model {
   set address(String? value) {
     _address = value;
   }
-
 
   String get description {
     if (hasDescription()) return _description!;
@@ -88,7 +94,8 @@ class Address extends Model {
   }
 
   bool hasDescription() {
-    if (_description != null && (_description?.isNotEmpty ?? false)) return true;
+    if (_description != null && (_description?.isNotEmpty ?? false))
+      return true;
     return false;
   }
 

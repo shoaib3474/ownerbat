@@ -44,16 +44,16 @@ class AddressPickerController extends GetxController {
     // Initialize with existing address or default
     double lat = 28.6139;
     double lng = 77.2090;
-    
+
     if (address.latitude != null && address.latitude > 0) {
       lat = address.latitude;
     }
     if (address.longitude != null && address.longitude > 0) {
       lng = address.longitude;
     }
-    
+
     selectedLatLng.value = gmap.LatLng(lat, lng);
-    
+
     // Set formatted address if it exists
     if (address.address.isNotEmpty) {
       formattedAddress.value = address.address;
@@ -71,8 +71,7 @@ class AddressPickerController extends GetxController {
 
     final completer = Completer<List<dynamic>>();
     _debounce = Timer(const Duration(milliseconds: 400), () async {
-      final url =
-          'https://maps.googleapis.com/maps/api/place/autocomplete/json'
+      final url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json'
           '?input=$input&key=$apiKey&components=country:in';
 
       final res = await http.get(Uri.parse(url));
@@ -85,8 +84,7 @@ class AddressPickerController extends GetxController {
 
   /// 📍 PLACE DETAILS
   Future<void> selectPlace(String placeId) async {
-    final url =
-        'https://maps.googleapis.com/maps/api/place/details/json'
+    final url = 'https://maps.googleapis.com/maps/api/place/details/json'
         '?place_id=$placeId&key=$apiKey';
 
     final res = await http.get(Uri.parse(url));
@@ -108,17 +106,17 @@ class AddressPickerController extends GetxController {
   Future<void> reverseGeocode(gmap.LatLng latLng) async {
     isLoading.value = true;
     try {
-      final url =
-          'https://maps.googleapis.com/maps/api/geocode/json'
+      final url = 'https://maps.googleapis.com/maps/api/geocode/json'
           '?latlng=${latLng.latitude},${latLng.longitude}&key=$apiKey';
 
       final res = await http.get(Uri.parse(url));
       final body = json.decode(res.body);
 
       if (body['results'] != null && body['results'].isNotEmpty) {
-        final formattedAddr = body['results'][0]['formatted_address'] ?? 'Unknown Location';
+        final formattedAddr =
+            body['results'][0]['formatted_address'] ?? 'Unknown Location';
         formattedAddress.value = formattedAddr;
-        
+
         address
           ..latitude = latLng.latitude
           ..longitude = latLng.longitude
@@ -151,11 +149,11 @@ class AddressPickerView extends GetView<AddressPickerController> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Obx(() => Text(
-          controller.formattedAddress.value.isEmpty
-              ? "Pick Address".tr
-              : controller.formattedAddress.value,
-          overflow: TextOverflow.ellipsis,
-        )),
+              controller.formattedAddress.value.isEmpty
+                  ? "Pick Address".tr
+                  : controller.formattedAddress.value,
+              overflow: TextOverflow.ellipsis,
+            )),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -167,23 +165,23 @@ class AddressPickerView extends GetView<AddressPickerController> {
         children: [
           /// MAP
           Obx(() => gmap.GoogleMap(
-            initialCameraPosition: gmap.CameraPosition(
-              target: controller.selectedLatLng.value,
-              zoom: 15,
-            ),
-            onTap: (latLng) async {
-              controller.selectedLatLng.value = latLng;
-              await controller.reverseGeocode(latLng);
-            },
-            markers: {
-              gmap.Marker(
-                markerId: const gmap.MarkerId("selected"),
-                position: controller.selectedLatLng.value,
-              ),
-            },
-            myLocationEnabled: false, // ✅ SAFE
-            zoomControlsEnabled: false,
-          )),
+                initialCameraPosition: gmap.CameraPosition(
+                  target: controller.selectedLatLng.value,
+                  zoom: 15,
+                ),
+                onTap: (latLng) async {
+                  controller.selectedLatLng.value = latLng;
+                  await controller.reverseGeocode(latLng);
+                },
+                markers: {
+                  gmap.Marker(
+                    markerId: const gmap.MarkerId("selected"),
+                    position: controller.selectedLatLng.value,
+                  ),
+                },
+                myLocationEnabled: false, // ✅ SAFE
+                zoomControlsEnabled: false,
+              )),
 
           /// BOTTOM PANEL (NO OVERFLOW)
           Align(
@@ -193,8 +191,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius:
-                  BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
                 child: SingleChildScrollView(
                   child: Column(
@@ -203,8 +200,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                       TextFieldWidget(
                         labelText: "Description".tr,
                         initialValue: controller.address.description,
-                        onChanged: (v) =>
-                        controller.address.description = v,
+                        onChanged: (v) => controller.address.description = v,
                         iconData: Icons.description_outlined,
                         isFirst: true,
                         isLast: false,
@@ -212,8 +208,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                       TextFieldWidget(
                         labelText: "Full Address".tr,
                         initialValue: controller.address.address,
-                        onChanged: (v) =>
-                        controller.address.address = v,
+                        onChanged: (v) => controller.address.address = v,
                         iconData: Icons.place_outlined,
                         isFirst: false,
                         isLast: true,
@@ -225,7 +220,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                         onPressed: () async {
                           final addr = controller.address;
                           final formCtrl =
-                          Get.find<SalonAddressesFormController>();
+                              Get.find<SalonAddressesFormController>();
 
                           addr.hasData
                               ? await formCtrl.updateAddress(addr)
@@ -271,8 +266,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                   itemBuilder: (_, i) => ListTile(
                     title: Text(results[i]['description']),
                     onTap: () async {
-                      await controller
-                          .selectPlace(results[i]['place_id']);
+                      await controller.selectPlace(results[i]['place_id']);
                       Get.back();
                     },
                   ),

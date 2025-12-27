@@ -41,7 +41,8 @@ void main() async {
 
   runApp(
     GetMaterialApp(
-      title: Get.find<SettingsService>().setting.value.salonAppName ?? 'Salon App',
+      title:
+          Get.find<SettingsService>().setting.value.salonAppName ?? 'Salon App',
       initialRoute: Theme1AppPages.INITIAL,
       onReady: () async {
         await Get.putAsync(() => FireBaseMessagingService().init());

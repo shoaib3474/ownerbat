@@ -16,7 +16,7 @@ class LocationService extends GetxService {
   /// Request location permission
   Future<bool> requestLocationPermission() async {
     final status = await Permission.location.request();
-    
+
     if (status.isDenied) {
       return false;
     } else if (status.isGranted) {
@@ -32,7 +32,7 @@ class LocationService extends GetxService {
   /// Check and request location permission if needed
   Future<bool> checkAndRequestLocationPermission() async {
     final isGranted = await isLocationPermissionGranted();
-    
+
     if (isGranted) {
       return true;
     } else {
