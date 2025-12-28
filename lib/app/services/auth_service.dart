@@ -14,6 +14,7 @@ import 'settings_service.dart';
 
 class AuthService extends GetxService {
   final user = User().obs;
+  final isLoggedIn = false.obs;
   late GetStorage _box;
   late UserRepository _usersRepo;
 
@@ -37,21 +38,32 @@ class AuthService extends GetxService {
     if (user.value.auth == null && _box.hasData('current_user')) {
       user.value = User.fromJson(await _box.read('current_user'));
       user.value.auth = true;
+      isLoggedIn.value = _box.read('isLoggedIn') ?? false;
     } else {
       user.value.auth = false;
+      isLoggedIn.value = false;
     }
+  }
+
+  Future setLoginState(bool loggedIn) async {
+    isLoggedIn.value = loggedIn;
+    await _box.write('isLoggedIn', loggedIn);
   }
 
   Future removeCurrentUser() async {
     user.value = User();
+    isLoggedIn.value = false;
     await _usersRepo.signOut();
     await _box.remove('current_user');
+    await _box.remove('isLoggedIn');
   }
 
   Future deleteAccount() async {
     user.value = User();
+    isLoggedIn.value = false;
     await _usersRepo.signOut();
     await _box.remove('current_user');
+    await _box.remove('isLoggedIn');
   }
 
   Future isRoleChanged() async {

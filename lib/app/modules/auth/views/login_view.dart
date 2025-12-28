@@ -21,16 +21,19 @@ import '../controllers/auth_controller.dart';
 class LoginView extends GetView<AuthController> {
   final Setting _settings = Get.find<SettingsService>().setting.value;
 
+  LoginView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    controller.loginFormKey = new GlobalKey<FormState>();
+    controller.loginFormKey = GlobalKey<FormState>();
     return WillPopScope(
       onWillPop: Helper().onWillPop,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "Login".tr,
-            style: Get.textTheme.titleLarge?.merge(TextStyle(color: context.theme.primaryColor)),
+            'Login'.tr,
+            style: Get.textTheme.titleLarge
+                ?.merge(TextStyle(color: context.theme.primaryColor)),
           ),
           centerTitle: true,
           backgroundColor: Get.theme.colorScheme.secondary,
@@ -50,24 +53,30 @@ class LoginView extends GetView<AuthController> {
                     width: Get.width,
                     decoration: BoxDecoration(
                       color: Get.theme.colorScheme.secondary,
-                      borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
+                      borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(10)),
                       boxShadow: [
-                        BoxShadow(color: Get.theme.focusColor.withOpacity(0.2), blurRadius: 10, offset: Offset(0, 5)),
+                        BoxShadow(
+                            color: Get.theme.focusColor.withOpacity(0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5)),
                       ],
                     ),
-                    margin: EdgeInsets.only(bottom: 50),
+                    margin: const EdgeInsets.only(bottom: 50),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: Column(
                         children: [
                           Text(
                             _settings.salonAppName ?? '',
-                            style: Get.textTheme.titleLarge?.merge(TextStyle(color: Get.theme.primaryColor, fontSize: 24)),
+                            style: Get.textTheme.titleLarge?.merge(TextStyle(
+                                color: Get.theme.primaryColor, fontSize: 24)),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
-                            "Welcome to the best salon service system!".tr,
-                            style: Get.textTheme.bodySmall?.merge(TextStyle(color: Get.theme.primaryColor)),
+                            'Welcome to the best salon service system!'.tr,
+                            style: Get.textTheme.bodySmall?.merge(
+                                TextStyle(color: Get.theme.primaryColor)),
                             textAlign: TextAlign.center,
                           ),
                           // Text("Fill the following credentials to login your account", style: Get.textTheme.bodySmall?.merge(TextStyle(color: Get.theme.primaryColor))),
@@ -78,10 +87,11 @@ class LoginView extends GetView<AuthController> {
                   Container(
                     decoration: Ui.getBoxDecoration(
                       radius: 14,
-                      border: Border.all(width: 5, color: Get.theme.primaryColor),
+                      border:
+                          Border.all(width: 5, color: Get.theme.primaryColor),
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: Image.asset(
                         'assets/icon/icon.png',
                         fit: BoxFit.cover,
@@ -100,29 +110,39 @@ class LoginView extends GetView<AuthController> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       TextFieldWidget(
-                        labelText: "Email Address".tr,
-                        hintText: "johndoe@gmail.com".tr,
+                        labelText: 'Email Address'.tr,
+                        hintText: 'johndoe@gmail.com'.tr,
                         initialValue: controller.currentUser.value.email,
-                        onSaved: (input) => controller.currentUser.value.email = input,
-                        validator: (input) => !input!.contains('@') ? "Should be a valid email".tr : null,
+                        onSaved: (input) =>
+                            controller.currentUser.value.email = input,
+                        validator: (input) => !input!.contains('@')
+                            ? 'Should be a valid email'.tr
+                            : null,
                         iconData: Icons.alternate_email,
                       ),
                       Obx(() {
                         return TextFieldWidget(
-                          labelText: "Password".tr,
-                          hintText: "••••••••••••".tr,
-                          initialValue: controller.currentUser.value.password ?? '',
-                          onSaved: (input) => controller.currentUser.value.password = input,
-                          validator: (input) => input!.length < 3 ? "Should be more than 3 characters".tr : null,
+                          labelText: 'Password'.tr,
+                          hintText: '••••••••••••'.tr,
+                          initialValue:
+                              controller.currentUser.value.password ?? '',
+                          onSaved: (input) =>
+                              controller.currentUser.value.password = input,
+                          validator: (input) => input!.length < 3
+                              ? 'Should be more than 3 characters'.tr
+                              : null,
                           obscureText: controller.hidePassword.value,
                           iconData: Icons.lock_outline,
                           keyboardType: TextInputType.visiblePassword,
                           suffixIcon: IconButton(
                             onPressed: () {
-                              controller.hidePassword.value = !controller.hidePassword.value;
+                              controller.hidePassword.value =
+                                  !controller.hidePassword.value;
                             },
                             color: Theme.of(context).focusColor,
-                            icon: Icon(controller.hidePassword.value ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                            icon: Icon(controller.hidePassword.value
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
                           ),
                         );
                       }),
@@ -133,7 +153,7 @@ class LoginView extends GetView<AuthController> {
                             onPressed: () {
                               Get.toNamed(Routes.FORGOT_PASSWORD);
                             },
-                            child: Text("Forgot Password?".tr),
+                            child: Text('Forgot Password?'.tr),
                           ),
                         ],
                       ).paddingSymmetric(horizontal: 20),
@@ -143,8 +163,9 @@ class LoginView extends GetView<AuthController> {
                         },
                         color: Get.theme.colorScheme.secondary,
                         text: Text(
-                          "Login".tr,
-                          style: Get.textTheme.titleLarge?.merge(TextStyle(color: Get.theme.primaryColor)),
+                          'Login'.tr,
+                          style: Get.textTheme.titleLarge
+                              ?.merge(TextStyle(color: Get.theme.primaryColor)),
                         ),
                       ).paddingSymmetric(vertical: 10, horizontal: 20),
                       TextButton(
