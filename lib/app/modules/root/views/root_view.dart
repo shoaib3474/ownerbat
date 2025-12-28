@@ -13,6 +13,8 @@ import '../../global_widgets/main_drawer_widget.dart';
 import '../controllers/root_controller.dart';
 
 class RootView extends GetView<RootController> {
+  const RootView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -29,19 +31,19 @@ class RootView extends GetView<RootController> {
           children: [
             CustomBottomNavigationItem(
               icon: Icons.home_outlined,
-              label: "Home".tr,
+              label: 'Home'.tr,
             ),
             CustomBottomNavigationItem(
               icon: Icons.star_border,
-              label: "Reviews".tr,
+              label: 'Reviews'.tr,
             ),
             CustomBottomNavigationItem(
               icon: Icons.chat_outlined,
-              label: "Chats".tr,
+              label: 'Chats'.tr,
             ),
             CustomBottomNavigationItem(
               icon: Icons.person_outline,
-              label: "Account".tr,
+              label: 'Account'.tr,
             ),
           ],
         ),

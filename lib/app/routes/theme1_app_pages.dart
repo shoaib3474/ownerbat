@@ -71,6 +71,7 @@ import '../services/auth_service.dart';
 import 'app_routes.dart';
 
 class Theme1AppPages {
+  // ignore: non_constant_identifier_names
   static String get INITIAL {
     try {
       final authService = Get.find<AuthService>();
@@ -91,7 +92,7 @@ class Theme1AppPages {
   static final routes = [
     GetPage(
         name: Routes.ROOT,
-        page: () => RootView(),
+        page: () => const RootView(),
         binding: RootBinding(),
         middlewares: [AuthMiddleware(), SalonOwnerMiddleware()]),
     GetPage(
