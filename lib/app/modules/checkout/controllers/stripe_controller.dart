@@ -27,7 +27,8 @@ class StripeController extends GetxController {
 
   @override
   void onInit() {
-    salonSubscription.value = Get.arguments['salonSubscription'] as SalonSubscription;
+    salonSubscription.value =
+        Get.arguments['salonSubscription'] as SalonSubscription;
     getUrl();
     initWebView();
     super.onInit();
@@ -52,11 +53,11 @@ class StripeController extends GetxController {
 
   void getUrl() {
     url.value = _paymentRepository.getStripeUrl(salonSubscription.value);
-    print(url.value);
   }
 
   void showConfirmationIfSuccess() {
-    final _doneUrl = "${Helper.toUrl(Get.find<GlobalService>().baseUrl)}subscription/payments/stripe";
+    final _doneUrl =
+        "${Helper.toUrl(Get.find<GlobalService>().baseUrl)}subscription/payments/stripe";
     if (url == _doneUrl) {
       Get.toNamed(Routes.CONFIRMATION, arguments: {
         'title': "Payment Successful".tr,

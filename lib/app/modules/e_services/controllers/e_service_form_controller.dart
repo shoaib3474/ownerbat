@@ -35,11 +35,10 @@ class EServiceFormController extends GetxController {
   @override
   void onInit() async {
     try {
-      var arguments = Get.arguments  as Map<String, dynamic>;
-      print(arguments);
+      var arguments = Get.arguments as Map<String, dynamic>;
       eService.value = arguments['eService'] as EService;
-    }catch(e){
-
+    } catch (e) {
+      Get.log('Error loading eService: $e', isError: true);
     }
 
     await getEService();
@@ -62,7 +61,9 @@ class EServiceFormController extends GetxController {
     await getSalons();
     await getOptionGroups();
     if (showMessage) {
-      Get.showSnackbar(Ui.SuccessSnackBar(message: eService.value.name! + " " + "page refreshed successfully".tr));
+      Get.showSnackbar(Ui.SuccessSnackBar(
+          message:
+              eService.value.name! + " " + "page refreshed successfully".tr));
     }
   }
 
@@ -107,7 +108,8 @@ class EServiceFormController extends GetxController {
   Future getOptionGroups() async {
     if (eService.value.hasData) {
       try {
-        var _optionGroups = await _eServiceRepository.getOptionGroups(eService.value.id!);
+        var _optionGroups =
+            await _eServiceRepository.getOptionGroups(eService.value.id!);
         optionGroups.assignAll(_optionGroups);
       } catch (e) {
         Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
@@ -129,14 +131,19 @@ class EServiceFormController extends GetxController {
         eServiceForm.currentState!.save();
         var _eService = await _eServiceRepository.create(eService.value);
         if (createOptions)
-          Get.offAndToNamed(Routes.OPTIONS_FORM, arguments: {'eService': _eService});
+          Get.offAndToNamed(Routes.OPTIONS_FORM,
+              arguments: {'eService': _eService});
         else
-          Get.offAndToNamed(Routes.E_SERVICE, arguments: {'eService': _eService, 'heroTag': 'e_service_create_form'});
+          Get.offAndToNamed(Routes.E_SERVICE, arguments: {
+            'eService': _eService,
+            'heroTag': 'e_service_create_form'
+          });
       } catch (e) {
         Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
       } finally {}
     } else {
-      Get.showSnackbar(Ui.ErrorSnackBar(message: "There are errors in some fields please correct them!".tr));
+      Get.showSnackbar(Ui.ErrorSnackBar(
+          message: "There are errors in some fields please correct them!".tr));
     }
   }
 
@@ -146,12 +153,16 @@ class EServiceFormController extends GetxController {
       try {
         eServiceForm.currentState!.save();
         var _eService = await _eServiceRepository.update(eService.value);
-        Get.offAndToNamed(Routes.E_SERVICE, arguments: {'eService': _eService, 'heroTag': 'e_service_update_form'});
+        Get.offAndToNamed(Routes.E_SERVICE, arguments: {
+          'eService': _eService,
+          'heroTag': 'e_service_update_form'
+        });
       } catch (e) {
         Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
       } finally {}
     } else {
-      Get.showSnackbar(Ui.ErrorSnackBar(message: "There are errors in some fields please correct them!".tr));
+      Get.showSnackbar(Ui.ErrorSnackBar(
+          message: "There are errors in some fields please correct them!".tr));
     }
   }
 
@@ -160,7 +171,8 @@ class EServiceFormController extends GetxController {
       await _eServiceRepository.delete(eService.value.id!);
       _eServicesController.refreshEServices(showMessage: false);
       Get.offAndToNamed(Routes.E_SERVICES);
-      Get.showSnackbar(Ui.SuccessSnackBar(message: eService.value.name! + " " + "has been removed".tr));
+      Get.showSnackbar(Ui.SuccessSnackBar(
+          message: eService.value.name! + " " + "has been removed".tr));
     } catch (e) {
       Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
     }

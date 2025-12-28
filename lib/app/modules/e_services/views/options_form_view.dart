@@ -28,7 +28,9 @@ class OptionsFormView extends GetView<OptionsFormController> {
         appBar: AppBar(
           title: Obx(() {
             return Text(
-              controller.isCreateForm() ? controller.eService.value.name ?? '' : controller.option.value.name ?? '',
+              controller.isCreateForm()
+                  ? controller.eService.value.name ?? ''
+                  : controller.option.value.name ?? '',
               style: context.textTheme.titleLarge,
             );
           }),
@@ -37,7 +39,10 @@ class OptionsFormView extends GetView<OptionsFormController> {
           automaticallyImplyLeading: false,
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back_ios, color: Get.theme.hintColor),
-            onPressed: () => Get.offAndToNamed(Routes.E_SERVICE, arguments: {'eService': controller.eService.value, 'heroTag': 'option_form_back'}),
+            onPressed: () => Get.offAndToNamed(Routes.E_SERVICE, arguments: {
+              'eService': controller.eService.value,
+              'heroTag': 'option_form_back'
+            }),
           ),
           actions: [
             new IconButton(
@@ -56,9 +61,13 @@ class OptionsFormView extends GetView<OptionsFormController> {
           padding: EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: Get.theme.primaryColor,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             boxShadow: [
-              BoxShadow(color: Get.theme.focusColor.withOpacity(0.1), blurRadius: 10, offset: Offset(0, -5)),
+              BoxShadow(
+                  color: Get.theme.focusColor.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: Offset(0, -5)),
             ],
           ),
           child: Row(
@@ -73,9 +82,12 @@ class OptionsFormView extends GetView<OptionsFormController> {
                     }
                   },
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                   color: Get.theme.colorScheme.secondary,
-                  child: Text("Save".tr, style: Get.textTheme.bodyMedium?.merge(TextStyle(color: Get.theme.primaryColor))),
+                  child: Text("Save".tr,
+                      style: Get.textTheme.bodyMedium
+                          ?.merge(TextStyle(color: Get.theme.primaryColor))),
                   elevation: 0,
                   hoverElevation: 0,
                   focusElevation: 0,
@@ -89,9 +101,12 @@ class OptionsFormView extends GetView<OptionsFormController> {
                     controller.createOptionForm(addOther: true);
                   },
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                   color: Get.theme.colorScheme.secondary.withOpacity(0.2),
-                  child: Text("Save & Add Other".tr, style: Get.textTheme.bodyMedium?.merge(TextStyle(color: Get.theme.colorScheme.secondary))),
+                  child: Text("Save & Add Other".tr,
+                      style: Get.textTheme.bodyMedium?.merge(
+                          TextStyle(color: Get.theme.colorScheme.secondary))),
                   elevation: 0,
                   hoverElevation: 0,
                   focusElevation: 0,
@@ -111,21 +126,29 @@ class OptionsFormView extends GetView<OptionsFormController> {
                     steps: [
                       StepWidget(
                         title: Text(
-                          ("Service details".tr).substring(0, min("Service details".tr.length, 15)),
+                          ("Service details".tr).substring(
+                              0, min("Service details".tr.length, 15)),
                         ),
                         color: Get.theme.focusColor,
-                        index: Text("1", style: TextStyle(color: Get.theme.primaryColor)),
+                        index: Text("1",
+                            style: TextStyle(color: Get.theme.primaryColor)),
                       ),
                       StepWidget(
                         title: Text(
-                          ("Options details".tr).substring(0, min("Options details".tr.length, 15)),
+                          ("Options details".tr).substring(
+                              0, min("Options details".tr.length, 15)),
                         ),
-                        index: Text("2", style: TextStyle(color: Get.theme.primaryColor)),
+                        index: Text("2",
+                            style: TextStyle(color: Get.theme.primaryColor)),
                       ),
                     ],
                   ),
-                Text("Options".tr, style: Get.textTheme.headlineSmall).paddingOnly(top: 25, bottom: 0, right: 22, left: 22),
-                Text("Fill the following details to add option to this service".tr, style: Get.textTheme.bodySmall)
+                Text("Options".tr, style: Get.textTheme.headlineSmall)
+                    .paddingOnly(top: 25, bottom: 0, right: 22, left: 22),
+                Text(
+                        "Fill the following details to add option to this service"
+                            .tr,
+                        style: Get.textTheme.bodySmall)
                     .paddingSymmetric(horizontal: 22, vertical: 5),
                 Obx(() {
                   return ImageFieldWidget(
@@ -147,29 +170,39 @@ class OptionsFormView extends GetView<OptionsFormController> {
                 }),
                 TextFieldWidget(
                   onSaved: (input) => controller.option.value.name = input,
-                  validator: (input) => input!.length < 1 ? "Field is required".tr : null,
+                  validator: (input) =>
+                      input!.length < 1 ? "Field is required".tr : null,
                   initialValue: controller.option.value.name,
                   hintText: "Large Size".tr,
                   labelText: "Name".tr,
                 ),
                 TextFieldWidget(
-                  onSaved: (input) => controller.option.value.description = input,
-                  validator: (input) => input!.length < 3 ? "Should be more than 3 letters".tr : null,
+                  onSaved: (input) =>
+                      controller.option.value.description = input,
+                  validator: (input) => input!.length < 3
+                      ? "Should be more than 3 letters".tr
+                      : null,
                   keyboardType: TextInputType.multiline,
                   initialValue: controller.option.value.description,
                   hintText: "Description for option".tr,
                   labelText: "Description".tr,
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 8, bottom: 10, left: 20, right: 20),
-                  margin: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+                  padding:
+                      EdgeInsets.only(top: 8, bottom: 10, left: 20, right: 20),
+                  margin:
+                      EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
                   decoration: BoxDecoration(
                       color: Get.theme.primaryColor,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       boxShadow: [
-                        BoxShadow(color: Get.theme.focusColor.withOpacity(0.1), blurRadius: 10, offset: Offset(0, 5)),
+                        BoxShadow(
+                            color: Get.theme.focusColor.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: Offset(0, 5)),
                       ],
-                      border: Border.all(color: Get.theme.focusColor.withOpacity(0.05))),
+                      border: Border.all(
+                          color: Get.theme.focusColor.withOpacity(0.05))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -184,17 +217,25 @@ class OptionsFormView extends GetView<OptionsFormController> {
                           ),
                           MaterialButton(
                             onPressed: () async {
-                              final selectedValue = await showDialog<OptionGroup>(
+                              final selectedValue =
+                                  await showDialog<OptionGroup>(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return SelectDialog(
                                     title: "Select Option Group".tr,
                                     submitText: "Submit".tr,
                                     cancelText: "Cancel".tr,
-                                    items: controller.getSelectOptionGroupsItems(),
-                                    initialSelectedValue: controller.optionGroups.firstWhere(
-                                      (element) => element.id == controller.option.value.optionGroupId,
-                                      orElse: () => controller.optionGroups.isNotEmpty ? controller.optionGroups.first : new OptionGroup(),
+                                    items:
+                                        controller.getSelectOptionGroupsItems(),
+                                    initialSelectedValue:
+                                        controller.optionGroups.firstWhere(
+                                      (element) =>
+                                          element.id ==
+                                          controller.option.value.optionGroupId,
+                                      orElse: () =>
+                                          controller.optionGroups.isNotEmpty
+                                              ? controller.optionGroups.first
+                                              : new OptionGroup(),
                                     ),
                                   );
                                 },
@@ -204,8 +245,10 @@ class OptionsFormView extends GetView<OptionsFormController> {
                               });
                             },
                             shape: StadiumBorder(),
-                            color: Get.theme.colorScheme.secondary.withOpacity(0.1),
-                            child: Text("Select".tr, style: Get.textTheme.titleMedium),
+                            color: Get.theme.colorScheme.secondary
+                                .withOpacity(0.1),
+                            child: Text("Select".tr,
+                                style: Get.textTheme.titleMedium),
                             elevation: 0,
                             hoverElevation: 0,
                             focusElevation: 0,
@@ -214,11 +257,15 @@ class OptionsFormView extends GetView<OptionsFormController> {
                         ],
                       ),
                       Obx(() {
-                        OptionGroup selectedOptionGroup = controller.optionGroups.firstWhere(
-                          (element) => element.id == controller.option.value.optionGroupId,
-                          orElse: () => controller.optionGroups.isNotEmpty ? controller.optionGroups.first : new OptionGroup(),
+                        OptionGroup selectedOptionGroup =
+                            controller.optionGroups.firstWhere(
+                          (element) =>
+                              element.id ==
+                              controller.option.value.optionGroupId,
+                          orElse: () => controller.optionGroups.isNotEmpty
+                              ? controller.optionGroups.first
+                              : OptionGroup(),
                         );
-                        print(selectedOptionGroup);
                         return buildOptionGroup(selectedOptionGroup.name);
                       })
                     ],
@@ -226,12 +273,19 @@ class OptionsFormView extends GetView<OptionsFormController> {
                 ),
                 TextFieldWidget(
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  onSaved: (input) => controller.option.value.price = (double.tryParse(input!) ?? 0),
-                  validator: (input) => (double.tryParse(input!) ?? 0) <= 0 ? "Should be number more than 0".tr : null,
+                  onSaved: (input) => controller.option.value.price =
+                      (double.tryParse(input!) ?? 0),
+                  validator: (input) => (double.tryParse(input!) ?? 0) <= 0
+                      ? "Should be number more than 0".tr
+                      : null,
                   initialValue: controller.option.value.price.toString(),
                   hintText: "23.00".tr,
                   labelText: "Price".tr,
-                  suffix: Text(Get.find<SettingsService>().setting.value.defaultCurrency ?? "USD"),
+                  suffix: Text(Get.find<SettingsService>()
+                          .setting
+                          .value
+                          .defaultCurrency ??
+                      "USD"),
                 ),
               ],
             ),
@@ -245,7 +299,8 @@ class OptionsFormView extends GetView<OptionsFormController> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 4),
         child: Text(_group ?? '', style: Get.textTheme.bodyMedium),
-        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
+        decoration:
+            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
       ),
     );
   }
@@ -263,7 +318,8 @@ class OptionsFormView extends GetView<OptionsFormController> {
           content: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                Text("This option will removed from the service".tr, style: Get.textTheme.bodyLarge),
+                Text("This option will removed from the service".tr,
+                    style: Get.textTheme.bodyLarge),
               ],
             ),
           ),

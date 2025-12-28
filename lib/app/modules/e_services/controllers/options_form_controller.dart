@@ -24,7 +24,6 @@ class OptionsFormController extends GetxController {
   @override
   void onInit() async {
     var arguments = Get.arguments as Map<String, dynamic>;
-    print(arguments);
     _initEService(arguments);
     _initOption(arguments: arguments);
     super.onInit();
@@ -49,8 +48,7 @@ class OptionsFormController extends GetxController {
       } else {
         option.value = new Option();
       }
-    } catch(e){
-    }
+    } catch (e) {}
 
     option.value.eServiceId = eService.value.id;
   }
@@ -60,7 +58,9 @@ class OptionsFormController extends GetxController {
       val!.optionGroupId = optionGroups
           .firstWhere(
             (element) => element.id == option.value.optionGroupId,
-            orElse: () => optionGroups.isNotEmpty ? optionGroups.first : new OptionGroup(),
+            orElse: () => optionGroups.isNotEmpty
+                ? optionGroups.first
+                : new OptionGroup(),
           )
           .id;
     });
@@ -102,13 +102,17 @@ class OptionsFormController extends GetxController {
         if (addOther) {
           _resetOptionForm();
         } else {
-          await Get.offAndToNamed(Routes.E_SERVICE, arguments: {'eService': eService.value, 'heroTag': 'option_create_form'});
+          await Get.offAndToNamed(Routes.E_SERVICE, arguments: {
+            'eService': eService.value,
+            'heroTag': 'option_create_form'
+          });
         }
       } catch (e) {
         Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
       } finally {}
     } else {
-      Get.showSnackbar(Ui.ErrorSnackBar(message: "There are errors in some fields please correct them!".tr));
+      Get.showSnackbar(Ui.ErrorSnackBar(
+          message: "There are errors in some fields please correct them!".tr));
     }
   }
 
@@ -126,19 +130,26 @@ class OptionsFormController extends GetxController {
       try {
         optionForm.currentState!.save();
         await _eServiceRepository.updateOption(option.value);
-        Get.offAndToNamed(Routes.E_SERVICE, arguments: {'eService': eService.value, 'heroTag': 'option_update_form'});
+        Get.offAndToNamed(Routes.E_SERVICE, arguments: {
+          'eService': eService.value,
+          'heroTag': 'option_update_form'
+        });
       } catch (e) {
         Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
       } finally {}
     } else {
-      Get.showSnackbar(Ui.ErrorSnackBar(message: "There are errors in some fields please correct them!".tr));
+      Get.showSnackbar(Ui.ErrorSnackBar(
+          message: "There are errors in some fields please correct them!".tr));
     }
   }
 
   void deleteOption(Option option) async {
     try {
       await _eServiceRepository.deleteOption(option.id!);
-      Get.offAndToNamed(Routes.E_SERVICE, arguments: {'eService': eService.value, 'heroTag': 'option_remove_form'});
+      Get.offAndToNamed(Routes.E_SERVICE, arguments: {
+        'eService': eService.value,
+        'heroTag': 'option_remove_form'
+      });
     } catch (e) {
       Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
     }

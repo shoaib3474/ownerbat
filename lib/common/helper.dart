@@ -39,7 +39,8 @@ class Helper {
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
-    if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
       currentBackPressTime = now;
       Get.showSnackbar(Ui.defaultSnackBar(message: "Tap again to leave!".tr));
       return Future.value(false);
@@ -56,14 +57,27 @@ class Helper {
       String dialCode3 = _phoneNumber.substring(1, 4);
       for (int i = 0; i < countries.length; i++) {
         if (countries[i].dialCode == dialCode1) {
-          return new PhoneNumber(countryISOCode: countries[i].code, countryCode: dialCode1, number: _phoneNumber.substring(2));
+          return PhoneNumber(
+              countryISOCode: countries[i].code,
+              countryCode: dialCode1,
+              number: _phoneNumber.substring(2));
         } else if (countries[i].dialCode == dialCode2) {
-          return new PhoneNumber(countryISOCode: countries[i].code, countryCode: dialCode2, number: _phoneNumber.substring(3));
+          return PhoneNumber(
+              countryISOCode: countries[i].code,
+              countryCode: dialCode2,
+              number: _phoneNumber.substring(3));
         } else if (countries[i].dialCode == dialCode3) {
-          return new PhoneNumber(countryISOCode: countries[i].code, countryCode: dialCode3, number: _phoneNumber.substring(4));
+          return PhoneNumber(
+              countryISOCode: countries[i].code,
+              countryCode: dialCode3,
+              number: _phoneNumber.substring(4));
         }
       }
     }
-    return new PhoneNumber(countryISOCode: Get.find<SettingsService>().setting.value.defaultCountryCode!, countryCode: '1', number: '');
+    return PhoneNumber(
+        countryISOCode:
+            Get.find<SettingsService>().setting.value.defaultCountryCode!,
+        countryCode: '1',
+        number: '');
   }
 }

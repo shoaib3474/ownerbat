@@ -18,8 +18,8 @@ class AuthService extends GetxService {
   late UserRepository _usersRepo;
 
   AuthService() {
-    _usersRepo = new UserRepository();
-    _box = new GetStorage();
+    _usersRepo = UserRepository();
+    _box = GetStorage();
   }
 
   Future<AuthService> init() async {
@@ -43,17 +43,16 @@ class AuthService extends GetxService {
   }
 
   Future removeCurrentUser() async {
-    user.value = new User();
+    user.value = User();
     await _usersRepo.signOut();
     await _box.remove('current_user');
   }
 
   Future deleteAccount() async {
-    user.value = new User();
+    user.value = User();
     await _usersRepo.signOut();
     await _box.remove('current_user');
   }
-
 
   Future isRoleChanged() async {
     try {
@@ -63,7 +62,8 @@ class AuthService extends GetxService {
       }
       return false;
     } catch (e) {
-      print(e);
+      Get.log('Error checking role: $e', isError: true);
+      return false;
     }
   }
 

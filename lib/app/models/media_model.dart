@@ -10,22 +10,28 @@ class Media extends Model {
   String? _icon;
   String? size;
 
-  String get url => _url ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
+  String get url =>
+      _url ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
 
-  String get thumb => _thumb ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
+  String get thumb =>
+      _thumb ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
 
-  String get icon => _icon ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
+  String get icon =>
+      _icon ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
 
   set url(String? value) {
-    _url = value ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
+    _url =
+        value ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
   }
 
   set icon(String? value) {
-    _icon = value ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
+    _icon =
+        value ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
   }
 
   set thumb(String? value) {
-    _thumb = value ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
+    _thumb =
+        value ?? "${Get.find<GlobalService>().baseUrl}images/image_default.png";
   }
 
   Media({String? id, String? url, String? thumb, String? icon}) {
@@ -47,7 +53,7 @@ class Media extends Model {
       url = "${Get.find<GlobalService>().baseUrl}images/image_default.png";
       thumb = "${Get.find<GlobalService>().baseUrl}images/image_default.png";
       icon = "${Get.find<GlobalService>().baseUrl}images/image_default.png";
-      print(e);
+      Get.log('Error loading media: $e', isError: true);
     }
   }
 
@@ -65,16 +71,23 @@ class Media extends Model {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-          super == other &&
-              other is Media &&
-              runtimeType == other.runtimeType &&
-              id == other.id &&
-              name == other.name &&
-              url == other.url &&
-              thumb == other.thumb &&
-              icon == other.icon &&
-              size == other.size;
+      super == other &&
+          other is Media &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          url == other.url &&
+          thumb == other.thumb &&
+          icon == other.icon &&
+          size == other.size;
 
   @override
-  int get hashCode => super.hashCode ^ id.hashCode ^ name.hashCode ^ url.hashCode ^ thumb.hashCode ^ icon.hashCode ^ size.hashCode;
+  int get hashCode =>
+      super.hashCode ^
+      id.hashCode ^
+      name.hashCode ^
+      url.hashCode ^
+      thumb.hashCode ^
+      icon.hashCode ^
+      size.hashCode;
 }

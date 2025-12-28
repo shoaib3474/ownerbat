@@ -48,7 +48,7 @@ class UserRepository {
     _firebaseProvider = Get.find<FirebaseProvider>();
     await _laravelApiClient.deleteUser(Get.find<AuthService>().user.value);
     await _firebaseProvider.deleteCurrentUser();
-    Get.find<AuthService>().user.value = new User();
+    Get.find<AuthService>().user.value = User();
     GetStorage().remove('current_user');
   }
 

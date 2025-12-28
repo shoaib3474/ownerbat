@@ -27,7 +27,8 @@ class RazorPayController extends GetxController {
 
   @override
   void onInit() {
-    salonSubscription.value = Get.arguments['salonSubscription'] as SalonSubscription;
+    salonSubscription.value =
+        Get.arguments['salonSubscription'] as SalonSubscription;
     getUrl();
     initWebView();
     super.onInit();
@@ -52,11 +53,11 @@ class RazorPayController extends GetxController {
 
   void getUrl() {
     url.value = _paymentRepository.getRazorPayUrl(salonSubscription.value);
-    print(url.value);
   }
 
   void showConfirmationIfSuccess() {
-    final _doneUrl = "${Helper.toUrl(Get.find<GlobalService>().baseUrl)}subscription/payments/razorpay";
+    final _doneUrl =
+        "${Helper.toUrl(Get.find<GlobalService>().baseUrl)}subscription/payments/razorpay";
     if (url == _doneUrl) {
       Get.toNamed(Routes.CONFIRMATION, arguments: {
         'title': "Payment Successful".tr,

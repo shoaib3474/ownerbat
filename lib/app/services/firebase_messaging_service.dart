@@ -15,7 +15,8 @@ import 'auth_service.dart';
 
 class FireBaseMessagingService extends GetxService {
   Future<FireBaseMessagingService> init() async {
-    FirebaseMessaging.instance.requestPermission(sound: true, badge: true, alert: true);
+    FirebaseMessaging.instance
+        .requestPermission(sound: true, badge: true, alert: true);
     await fcmOnLaunchListeners();
     await fcmOnResumeListeners();
     await fcmOnMessageListeners();
@@ -36,7 +37,8 @@ class FireBaseMessagingService extends GetxService {
   }
 
   Future fcmOnLaunchListeners() async {
-    RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? message =
+        await FirebaseMessaging.instance.getInitialMessage();
     if (message != null) {
       _notificationsBackground(message);
     }
@@ -58,18 +60,21 @@ class FireBaseMessagingService extends GetxService {
 
   void _newBookingNotificationBackground(message) {
     if (Get.isRegistered<RootController>()) {
-      Get.toNamed(Routes.BOOKING, arguments: new Booking(id: message.data['bookingId']));
+      Get.toNamed(Routes.BOOKING,
+          arguments: Booking(id: message.data['bookingId']));
     }
   }
 
   void _newMessageNotificationBackground(RemoteMessage message) {
     if (message.data['messageId'] != null) {
-      Get.toNamed(Routes.CHAT, arguments: new Message([], id: message.data['messageId']));
+      Get.toNamed(Routes.CHAT,
+          arguments: Message([], id: message.data['messageId']));
     }
   }
 
   Future<void> setDeviceToken() async {
-    Get.find<AuthService>().user.value.deviceToken = await FirebaseMessaging.instance.getToken();
+    Get.find<AuthService>().user.value.deviceToken =
+        await FirebaseMessaging.instance.getToken();
   }
 
   void _bookingNotification(RemoteMessage message) {
@@ -92,7 +97,7 @@ class FireBaseMessagingService extends GetxService {
           child: CachedNetworkImage(
             width: double.infinity,
             fit: BoxFit.cover,
-              imageUrl: message.data != null ? message.data['icon'] : "",
+            imageUrl: message.data != null ? message.data['icon'] : "",
             placeholder: (context, url) => Image.asset(
               'assets/img/loading.gif',
               fit: BoxFit.cover,
@@ -105,7 +110,8 @@ class FireBaseMessagingService extends GetxService {
       onTap: (getBar) {
         if (message.data['bookingId'] != null) {
           Get.back();
-          Get.toNamed(Routes.BOOKING, arguments: new Booking(id: message.data['bookingId']));
+          Get.toNamed(Routes.BOOKING,
+              arguments: Booking(id: message.data['bookingId']));
         }
       },
     ));
@@ -139,10 +145,11 @@ class FireBaseMessagingService extends GetxService {
             ),
           ),
         ),
-        onTap: (getBar)  {
+        onTap: (getBar) {
           if (message.data['messageId'] != null) {
             Get.back();
-            Get.toNamed(Routes.CHAT, arguments: new Message([], id: message.data['messageId']));
+            Get.toNamed(Routes.CHAT,
+                arguments: Message([], id: message.data['messageId']));
           }
         },
       ));

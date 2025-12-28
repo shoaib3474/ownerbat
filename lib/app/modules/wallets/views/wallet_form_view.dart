@@ -98,7 +98,7 @@ class WalletFormView extends GetView<WalletFormController> {
                     controller.wallet.update((val) {
                       val!.name = input;
                     });
-                    print(controller.wallet.value);
+                    
                     controller.wallet.value.name = input;
                   },
                   validator: (input) => input!.length < 1 ? "Field is required".tr : null,

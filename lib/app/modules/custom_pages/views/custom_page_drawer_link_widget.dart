@@ -24,7 +24,6 @@ class CustomPageDrawerLinkWidget extends GetView<RootController> {
             icon: getDrawerLinkIcon(_page),
             text: _page.title ?? "",
             onTap: (e) async {
-              //print(_page.id);
               await Get.offAndToNamed(Routes.CUSTOM_PAGES, arguments: _page);
             },
           );

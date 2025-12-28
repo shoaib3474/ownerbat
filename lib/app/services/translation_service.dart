@@ -22,8 +22,8 @@ class TranslationService extends GetxService {
   late GetStorage _box;
 
   TranslationService() {
-    _settingsRepo = new SettingRepository();
-    _box = new GetStorage();
+    _settingsRepo = SettingRepository();
+    _box = GetStorage();
   }
 
   // initialize the translation service by loading the assets/locales folder
@@ -38,7 +38,8 @@ class TranslationService extends GetxService {
 
   Future<void> loadTranslation({locale}) async {
     locale = locale ?? getLocale().languageCode;
-    Map<String, String> _translations = await _settingsRepo.getTranslations(locale);
+    Map<String, String> _translations =
+        await _settingsRepo.getTranslations(locale);
     Get.addTranslations({locale: _translations});
     Get.find<LaravelApiClient>().setLocale(locale);
   }
@@ -62,7 +63,8 @@ class TranslationService extends GetxService {
   Locale fromStringToLocale(String _locale) {
     if (_locale.contains('_')) {
       // en_US
-      return Locale(_locale.split('_').elementAt(0), _locale.split('_').elementAt(1));
+      return Locale(
+          _locale.split('_').elementAt(0), _locale.split('_').elementAt(1));
     } else {
       // en
       return Locale(_locale);

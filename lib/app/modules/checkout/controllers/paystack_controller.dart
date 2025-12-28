@@ -27,7 +27,8 @@ class PayStackController extends GetxController {
 
   @override
   void onInit() {
-    salonSubscription.value = Get.arguments['salonSubscription'] as SalonSubscription;
+    salonSubscription.value =
+        Get.arguments['salonSubscription'] as SalonSubscription;
     getUrl();
     initWebView();
     super.onInit();
@@ -52,11 +53,11 @@ class PayStackController extends GetxController {
 
   void getUrl() {
     url.value = _paymentRepository.getPayStackUrl(salonSubscription.value);
-    print(url.value);
   }
 
   void showConfirmationIfSuccess() {
-    final _doneUrl = "${Helper.toUrl(Get.find<GlobalService>().baseUrl)}subscription/payments/paystack";
+    final _doneUrl =
+        "${Helper.toUrl(Get.find<GlobalService>().baseUrl)}subscription/payments/paystack";
     if (url == _doneUrl) {
       Get.toNamed(Routes.CONFIRMATION, arguments: {
         'title': "Payment Successful".tr,
