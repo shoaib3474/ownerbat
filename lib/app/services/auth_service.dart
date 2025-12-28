@@ -28,26 +28,33 @@ class AuthService extends GetxService {
       if (Get.isRegistered<SettingsService>()) {
         Get.find<SettingsService>().address.value.userId = _user.id;
       }
+      // Always save user data when it changes
       _box.write('current_user', _user.toJson());
+      Get.log('User data saved to storage: ${_user.email}');
     });
     await getCurrentUser();
     return this;
   }
 
   Future getCurrentUser() async {
-    if (user.value.auth == null && _box.hasData('current_user')) {
+    if (_box.hasData('current_user')) {
       user.value = User.fromJson(await _box.read('current_user'));
       user.value.auth = true;
       isLoggedIn.value = _box.read('isLoggedIn') ?? false;
+      Get.log(
+          'Restored user from storage: ${user.value.email}, isLoggedIn: ${isLoggedIn.value}');
     } else {
+      user.value = User();
       user.value.auth = false;
       isLoggedIn.value = false;
+      Get.log('No saved user found, starting fresh');
     }
   }
 
   Future setLoginState(bool loggedIn) async {
     isLoggedIn.value = loggedIn;
     await _box.write('isLoggedIn', loggedIn);
+    Get.log('isLoggedIn saved to storage: $loggedIn');
   }
 
   Future removeCurrentUser() async {

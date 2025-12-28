@@ -26,12 +26,13 @@ class AuthController extends GetxController {
   final hidePassword = true.obs;
   final loading = false.obs;
   final smsSent = ''.obs;
+  final rememberMe = false.obs;
   late UserRepository _userRepository;
 
   AuthController() {
-    loginFormKey = new GlobalKey<FormState>();
-    registerFormKey = new GlobalKey<FormState>();
-    forgotPasswordFormKey = new GlobalKey<FormState>();
+    loginFormKey = GlobalKey<FormState>();
+    registerFormKey = GlobalKey<FormState>();
+    forgotPasswordFormKey = GlobalKey<FormState>();
     _userRepository = UserRepository();
   }
 
@@ -44,13 +45,32 @@ class AuthController extends GetxController {
       try {
         await Get.find<FireBaseMessagingService>().setDeviceToken();
         currentUser.value = await _userRepository.login(currentUser.value);
+        Get.log('User logged in: ${currentUser.value.email}');
+
         await _userRepository.signInWithEmailAndPassword(
             currentUser.value.email, currentUser.value.apiToken);
-        // Set login state to true
-        await Get.find<AuthService>().setLoginState(true);
+
+        // Trigger user listener to save data to storage
+        currentUser.refresh();
+
+        // Small delay to ensure data is saved
+        await Future.delayed(Duration(milliseconds: 500));
+
+        // Set login state based on Remember Me checkbox
+        if (rememberMe.value) {
+          await Get.find<AuthService>().setLoginState(true);
+          Get.log(
+              'Login successful - isLoggedIn set to true for: ${currentUser.value.email} (Remember Me enabled)');
+        } else {
+          Get.log(
+              'Login successful - Remember Me disabled for: ${currentUser.value.email}');
+        }
+
         loading.value = false;
+        Get.log('Navigating to ROOT...');
         await Get.toNamed(Routes.ROOT, arguments: 0);
       } catch (e) {
+        Get.log('Login error: $e', isError: true);
         Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
       } finally {
         loading.value = false;
@@ -73,12 +93,22 @@ class AuthController extends GetxController {
           currentUser.value = await _userRepository.register(currentUser.value);
           await _userRepository.signUpWithEmailAndPassword(
               currentUser.value.email, currentUser.value.apiToken);
-          // Set login state to true
+
+          // Trigger user listener to save data to storage
+          currentUser.refresh();
+
+          // Small delay to ensure data is saved
+          await Future.delayed(Duration(milliseconds: 500));
+
+          // Set login state to true for registration (auto-remember)
           await Get.find<AuthService>().setLoginState(true);
+          Get.log('Registration successful - auto-remember enabled');
+
           loading.value = false;
           await Get.toNamed(Routes.SALONS);
         }
       } catch (e) {
+        Get.log('Register error: $e', isError: true);
         Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
       } finally {
         loading.value = false;
@@ -94,8 +124,17 @@ class AuthController extends GetxController {
       currentUser.value = await _userRepository.register(currentUser.value);
       await _userRepository.signUpWithEmailAndPassword(
           currentUser.value.email, currentUser.value.apiToken);
-      // Set login state to true
+
+      // Trigger user listener to save data to storage
+      currentUser.refresh();
+
+      // Small delay to ensure data is saved
+      await Future.delayed(Duration(milliseconds: 500));
+
+      // Set login state to true (auto-remember after phone verification)
       await Get.find<AuthService>().setLoginState(true);
+      Get.log('Phone verification successful - auto-remember enabled');
+
       loading.value = false;
       await Get.toNamed(Routes.SALONS);
     } catch (e) {
@@ -121,9 +160,9 @@ class AuthController extends GetxController {
         loading.value = false;
         Get.showSnackbar(Ui.SuccessSnackBar(
             message:
-                "The Password reset link has been sent to your email: ".tr +
+                'The Password reset link has been sent to your email: '.tr +
                     currentUser.value.email));
-        Timer(Duration(seconds: 5), () {
+        Timer(const Duration(seconds: 5), () {
           Get.offAndToNamed(Routes.LOGIN);
         });
       } catch (e) {

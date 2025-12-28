@@ -147,8 +147,33 @@ class LoginView extends GetView<AuthController> {
                         );
                       }),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Obx(() {
+                            return GestureDetector(
+                              onTap: () {
+                                controller.rememberMe.value =
+                                    !controller.rememberMe.value;
+                              },
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                    value: controller.rememberMe.value,
+                                    onChanged: (value) {
+                                      controller.rememberMe.value =
+                                          value ?? false;
+                                    },
+                                    activeColor:
+                                        Get.theme.colorScheme.secondary,
+                                  ),
+                                  Text(
+                                    'Remember Me'.tr,
+                                    style: Get.textTheme.bodySmall,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                           TextButton(
                             onPressed: () {
                               Get.toNamed(Routes.FORGOT_PASSWORD);

@@ -71,10 +71,22 @@ import '../services/auth_service.dart';
 import 'app_routes.dart';
 
 class Theme1AppPages {
-  static final INITIAL = Get.find<AuthService>().isLoggedIn.value &&
-          Get.find<AuthService>().user.value.isSalonOwner
-      ? Routes.ROOT
-      : Routes.LOGIN;
+  static String get INITIAL {
+    try {
+      final authService = Get.find<AuthService>();
+      Get.log(
+          'INITIAL check - isLoggedIn: ${authService.isLoggedIn.value}, isSalonOwner: ${authService.user.value.isSalonOwner}');
+
+      // If user has checked "Remember Me" and is logged in, go to ROOT
+      if (authService.isLoggedIn.value) {
+        return Routes.ROOT;
+      }
+      return Routes.LOGIN;
+    } catch (e) {
+      Get.log('Error in INITIAL route: $e', isError: true);
+      return Routes.LOGIN;
+    }
+  }
 
   static final routes = [
     GetPage(
