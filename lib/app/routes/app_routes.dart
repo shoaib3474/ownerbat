@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 /*
  * File name: app_routes.dart
  * Last modified: 2022.10.16 at 12:23:12
@@ -60,4 +62,5 @@ class Routes {
   static const WALLET_FORM = '/wallet_form';
   static const PACKAGES = '/packages';
   static const SUBSCRIPTIONS = '/subscriptions';
+  static const SIMILAR_SUBSCRIPTIONS = '/similar-subscriptions';
 }

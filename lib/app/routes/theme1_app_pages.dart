@@ -64,6 +64,8 @@ import '../modules/settings/views/theme_mode_view.dart';
 import '../modules/subscriptions/bindings/subscription_binding.dart';
 import '../modules/subscriptions/views/packages_view.dart';
 import '../modules/subscriptions/views/subscriptions_view.dart';
+import '../modules/similar_subscriptions/bindings/similar_subscriptions_binding.dart';
+import '../modules/similar_subscriptions/views/similar_subscriptions_view.dart';
 import '../modules/wallets/bindings/wallets_binding.dart';
 import '../modules/wallets/views/wallet_form_view.dart';
 import '../modules/wallets/views/wallets_view.dart';
@@ -239,6 +241,10 @@ class Theme1AppPages {
         name: Routes.SUBSCRIPTIONS,
         page: () => SubscriptionsView(),
         binding: SubscriptionBinding()),
+    GetPage(
+        name: Routes.SIMILAR_SUBSCRIPTIONS,
+        page: () => const SimilarSubscriptionsView(),
+        binding: SimilarSubscriptionsBinding()),
     GetPage(
         name: Routes.CHECKOUT,
         page: () => CheckoutView(),
