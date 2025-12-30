@@ -33,4 +33,9 @@ class SubscriptionRepository {
   Future<List<SalonSubscription>> getSalonSubscriptions() {
     return _laravelApiClient.getSalonSubscriptions();
   }
+
+  Future<bool> hasActiveSubscription() async {
+    final response = await _laravelApiClient.getMySalonSubscription();
+    return response['active'] == true;
+  }
 }

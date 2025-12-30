@@ -1756,4 +1756,21 @@ class LaravelApiClient extends GetxService with ApiClient {
       throw Exception(response.data['message']);
     }
   }
+
+  Future<Map<String, dynamic>> getMySalonSubscription() async {
+    if (!authService.isAuth) {
+      throw Exception("Not authenticated");
+    }
+
+    final query = {
+      'api_token': authService.apiToken,
+    };
+
+    final uri = getApiBaseUri("salon_owner/subscription")
+        .replace(queryParameters: query);
+
+    final response = await httpClient.getUri(uri, options: optionsNetwork);
+
+    return response.data;
+  }
 }
