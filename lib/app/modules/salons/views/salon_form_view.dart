@@ -32,7 +32,9 @@ class SalonFormView extends GetView<SalonFormController> {
         appBar: AppBar(
           title: Obx(() {
             return Text(
-              controller.isCreateForm() ? "New Salon".tr : controller.salon.value.name!,
+              controller.isCreateForm()
+                  ? "New Salon".tr
+                  : controller.salon.value.name!,
               style: context.textTheme.titleLarge,
             );
           }),
@@ -59,7 +61,8 @@ class SalonFormView extends GetView<SalonFormController> {
                     builder: (BuildContext context) {
                       return ConfirmDialog(
                         title: "Delete Salon".tr,
-                        content: "Are you sure you want to delete this salon?".tr,
+                        content:
+                            "Are you sure you want to delete this salon?".tr,
                         submitText: "Confirm".tr,
                         cancelText: "Cancel".tr,
                       );
@@ -76,9 +79,13 @@ class SalonFormView extends GetView<SalonFormController> {
           padding: EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: Get.theme.primaryColor,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             boxShadow: [
-              BoxShadow(color: Get.theme.focusColor.withOpacity(0.1), blurRadius: 10, offset: Offset(0, -5)),
+              BoxShadow(
+                  color: Get.theme.focusColor.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: Offset(0, -5)),
             ],
           ),
           child: Row(
@@ -96,11 +103,14 @@ class SalonFormView extends GetView<SalonFormController> {
                             }
                           },
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     color: Get.theme.colorScheme.secondary,
                     disabledElevation: 0,
                     disabledColor: Get.theme.focusColor,
-                    child: Text("Save & Next".tr, style: Get.textTheme.bodyMedium?.merge(TextStyle(color: Get.theme.primaryColor))),
+                    child: Text("Save & Next".tr,
+                        style: Get.textTheme.bodyMedium
+                            ?.merge(TextStyle(color: Get.theme.primaryColor))),
                     elevation: 0,
                   ),
                 );
@@ -122,100 +132,235 @@ class SalonFormView extends GetView<SalonFormController> {
                         "Addresses".tr,
                       ),
                       color: Get.theme.focusColor,
-                      index: Text("1", style: TextStyle(color: Get.theme.primaryColor)),
+                      index: Text("1",
+                          style: TextStyle(color: Get.theme.primaryColor)),
                     ),
                     StepWidget(
                       title: Text(
                         "Salon Details".tr,
                       ),
-                      index: Text("2", style: TextStyle(color: Get.theme.primaryColor)),
+                      index: Text("2",
+                          style: TextStyle(color: Get.theme.primaryColor)),
                     ),
                     StepWidget(
                       title: Text(
                         "Availability".tr,
                       ),
                       color: Get.theme.focusColor,
-                      index: Text("3", style: TextStyle(color: Get.theme.primaryColor)),
+                      index: Text("3",
+                          style: TextStyle(color: Get.theme.primaryColor)),
                     ),
                   ],
                 ),
-                Text("Salon details".tr, style: Get.textTheme.headlineSmall).paddingOnly(top: 25, bottom: 0, right: 22, left: 22),
-                Text("Fill the following details and save them".tr, style: Get.textTheme.bodySmall).paddingSymmetric(horizontal: 22, vertical: 5),
+                Text("Salon details".tr, style: Get.textTheme.headlineSmall)
+                    .paddingOnly(top: 25, bottom: 0, right: 22, left: 22),
+                Text("Fill the following details and save them".tr,
+                        style: Get.textTheme.bodySmall)
+                    .paddingSymmetric(horizontal: 22, vertical: 5),
                 Obx(() {
-                  return ImagesFieldWidget(
-                    label: "Images".tr,
-                    field: 'image',
-                    tag: controller.salonForm.hashCode.toString(),
-                    initialImages: controller.salon.value.images ?? [],
-                    uploadCompleted: (uuid) {
-                      controller.salon.update((val) {
-                        val?.images = val.images ?? [];
-                        val?.images?.add(new Media(id: uuid));
-                      });
-                    },
-                    reset: (uuids) {
-                      controller.salon.update((val) {
-                        val!.images!.clear();
-                      });
-                    },
+                  return Container(
+                    margin: const EdgeInsets.only(
+                        left: 20, right: 20, top: 25, bottom: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Get.theme.focusColor.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5)),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      child: ImagesFieldWidget(
+                        label: "Salon Photos".tr,
+                        field: 'image',
+                        tag: controller.salonForm.hashCode.toString(),
+                        initialImages: controller.salon.value.images ?? [],
+                        uploadCompleted: (uuid) {
+                          controller.salon.update((val) {
+                            val?.images = val.images ?? [];
+                            val?.images?.add(new Media(id: uuid));
+                          });
+                        },
+                        reset: (uuids) {
+                          controller.salon.update((val) {
+                            val!.images!.clear();
+                          });
+                        },
+                      ),
+                    ),
                   );
                 }),
-                TextFieldWidget(
-                  onSaved: (input) => controller.salon.value.name = input,
-                  validator: (input) => input!.length < 3 ? "Should be more than 3 letters".tr : null,
-                  initialValue: controller.salon.value.name,
-                  hintText: "Architect Mayer Group".tr,
-                  labelText: "Name".tr,
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 20, right: 20, top: 15, bottom: 15),
+                  decoration: BoxDecoration(
+                    color: Get.theme.primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Get.theme.focusColor.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5)),
+                    ],
+                    border: Border.all(
+                        color: Get.theme.focusColor.withOpacity(0.05)),
+                  ),
+                  child: TextFieldWidget(
+                    onSaved: (input) => controller.salon.value.name = input,
+                    validator: (input) => input!.length < 3
+                        ? "Should be more than 3 letters".tr
+                        : null,
+                    initialValue: controller.salon.value.name,
+                    hintText: "Architect Mayer Group".tr,
+                    labelText: "Salon Name".tr,
+                  ),
                 ),
-                TextFieldWidget(
-                  onSaved: (input) => controller.salon.value.description = input,
-                  validator: (input) => input!.length < 3 ? "Should be more than 3 letters".tr : null,
-                  keyboardType: TextInputType.multiline,
-                  initialValue: controller.salon.value.description,
-                  hintText: "Description for Architect Mayer Group".tr,
-                  labelText: "Description".tr,
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 20, right: 20, top: 15, bottom: 15),
+                  decoration: BoxDecoration(
+                    color: Get.theme.primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Get.theme.focusColor.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5)),
+                    ],
+                    border: Border.all(
+                        color: Get.theme.focusColor.withOpacity(0.05)),
+                  ),
+                  child: TextFieldWidget(
+                    onSaved: (input) =>
+                        controller.salon.value.description = input,
+                    validator: (input) => input!.length < 3
+                        ? "Should be more than 3 letters".tr
+                        : null,
+                    keyboardType: TextInputType.multiline,
+                    initialValue: controller.salon.value.description,
+                    hintText: "Description for Architect Mayer Group".tr,
+                    labelText: "Description".tr,
+                  ),
                 ),
-                PhoneFieldWidget(
-                  labelText: "Phone Number".tr,
-                  hintText: "223 665 7896".tr,
-                  initialCountryCode: Helper.getPhoneNumber(controller.salon.value.phoneNumber).countryISOCode,
-                  initialValue: Helper.getPhoneNumber(controller.salon.value.phoneNumber).number,
-                  onSaved: (phone) {
-                    controller.salon.value.phoneNumber = phone!.completeNumber;
-                  },
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 20, right: 20, top: 15, bottom: 15),
+                  decoration: BoxDecoration(
+                    color: Get.theme.primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Get.theme.focusColor.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5)),
+                    ],
+                    border: Border.all(
+                        color: Get.theme.focusColor.withOpacity(0.05)),
+                  ),
+                  child: PhoneFieldWidget(
+                    labelText: "Phone Number".tr,
+                    hintText: "223 665 7896".tr,
+                    initialCountryCode: Helper.getPhoneNumber(
+                            controller.salon.value.phoneNumber)
+                        .countryISOCode,
+                    initialValue: Helper.getPhoneNumber(
+                            controller.salon.value.phoneNumber)
+                        .number,
+                    onSaved: (phone) {
+                      controller.salon.value.phoneNumber =
+                          phone!.completeNumber;
+                    },
+                  ),
                 ),
-                PhoneFieldWidget(
-                  labelText: "Mobile Number".tr,
-                  hintText: "223 665 7896".tr,
-                  initialCountryCode: Helper.getPhoneNumber(controller.salon.value.mobileNumber).countryISOCode,
-                  initialValue: Helper.getPhoneNumber(controller.salon.value.mobileNumber).number,
-                  onSaved: (phone) {
-                     controller.salon.value.mobileNumber = phone!.completeNumber;
-                  },
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 20, right: 20, top: 15, bottom: 15),
+                  decoration: BoxDecoration(
+                    color: Get.theme.primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Get.theme.focusColor.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5)),
+                    ],
+                    border: Border.all(
+                        color: Get.theme.focusColor.withOpacity(0.05)),
+                  ),
+                  child: PhoneFieldWidget(
+                    labelText: "Mobile Number".tr,
+                    hintText: "223 665 7896".tr,
+                    initialCountryCode: Helper.getPhoneNumber(
+                            controller.salon.value.mobileNumber)
+                        .countryISOCode,
+                    initialValue: Helper.getPhoneNumber(
+                            controller.salon.value.mobileNumber)
+                        .number,
+                    onSaved: (phone) {
+                      controller.salon.value.mobileNumber =
+                          phone!.completeNumber;
+                    },
+                  ),
                 ),
-                TextFieldWidget(
-                  onSaved: (input) => controller.salon.value.availabilityRange = double.tryParse(input!) ?? 0,
-                  validator: (input) => (double.tryParse(input!) ?? 0) <= 0 ? "Should be more than 0".tr : null,
-                  initialValue: controller.salon.value.availabilityRange?.toString() ?? null,
-                  keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-                  hintText: "5".tr,
-                  labelText: "Availability Range".tr,
-                  suffix: Text(Get.find<SettingsService>().setting.value.distanceUnit!.tr),
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 20, right: 20, top: 15, bottom: 15),
+                  decoration: BoxDecoration(
+                    color: Get.theme.primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Get.theme.focusColor.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5)),
+                    ],
+                    border: Border.all(
+                        color: Get.theme.focusColor.withOpacity(0.05)),
+                  ),
+                  child: TextFieldWidget(
+                    onSaved: (input) => controller.salon.value
+                        .availabilityRange = double.tryParse(input!) ?? 0,
+                    validator: (input) => (double.tryParse(input!) ?? 0) <= 0
+                        ? "Should be more than 0".tr
+                        : null,
+                    initialValue: controller.salon.value.availabilityRange !=
+                                null &&
+                            controller.salon.value.availabilityRange! > 0
+                        ? controller.salon.value.availabilityRange?.toString()
+                        : null,
+                    keyboardType: TextInputType.numberWithOptions(
+                        signed: false, decimal: true),
+                    hintText: "Enter range".tr,
+                    labelText: "Availability Range".tr,
+                    suffix: Text(Get.find<SettingsService>()
+                        .setting
+                        .value
+                        .distanceUnit!
+                        .tr),
+                  ),
                 ),
                 Obx(() {
                   if (controller.salonLevels.isEmpty)
                     return SizedBox();
                   else
                     return Container(
-                      padding: EdgeInsets.only(top: 8, bottom: 10, left: 20, right: 20),
-                      margin: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+                      padding: EdgeInsets.only(
+                          top: 8, bottom: 10, left: 20, right: 20),
+                      margin: EdgeInsets.only(
+                          left: 20, right: 20, top: 20, bottom: 20),
                       decoration: BoxDecoration(
                           color: Get.theme.primaryColor,
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
-                            BoxShadow(color: Get.theme.focusColor.withOpacity(0.1), blurRadius: 10, offset: Offset(0, 5)),
+                            BoxShadow(
+                                color: Get.theme.focusColor.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: Offset(0, 5)),
                           ],
-                          border: Border.all(color: Get.theme.focusColor.withOpacity(0.05))),
+                          border: Border.all(
+                              color: Get.theme.focusColor.withOpacity(0.05))),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -230,16 +375,22 @@ class SalonFormView extends GetView<SalonFormController> {
                               ),
                               MaterialButton(
                                 onPressed: () async {
-                                  final selectedValue = await showDialog<SalonLevel>(
+                                  final selectedValue =
+                                      await showDialog<SalonLevel>(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return SelectDialog(
                                         title: "Select Salon Level".tr,
                                         submitText: "Submit".tr,
                                         cancelText: "Cancel".tr,
-                                        items: controller.getSelectSalonLevelsItems(),
-                                        initialSelectedValue: controller.salonLevels.firstWhere(
-                                          (element) => element.id == controller.salon.value.salonLevel?.id,
+                                        items: controller
+                                            .getSelectSalonLevelsItems(),
+                                        initialSelectedValue:
+                                            controller.salonLevels.firstWhere(
+                                          (element) =>
+                                              element.id ==
+                                              controller
+                                                  .salon.value.salonLevel?.id,
                                           orElse: () => new SalonLevel(),
                                         ),
                                       );
@@ -250,8 +401,10 @@ class SalonFormView extends GetView<SalonFormController> {
                                   });
                                 },
                                 shape: StadiumBorder(),
-                                color: Get.theme.colorScheme.secondary.withOpacity(0.1),
-                                child: Text("Select".tr, style: Get.textTheme.titleMedium),
+                                color: Get.theme.colorScheme.secondary
+                                    .withOpacity(0.1),
+                                child: Text("Select".tr,
+                                    style: Get.textTheme.titleMedium),
                                 elevation: 0,
                                 hoverElevation: 0,
                                 focusElevation: 0,
@@ -278,15 +431,21 @@ class SalonFormView extends GetView<SalonFormController> {
                 }),
                 if (!controller.isCreateForm())
                   Container(
-                    padding: EdgeInsets.only(top: 8, bottom: 10, left: 20, right: 20),
-                    margin: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+                    padding: EdgeInsets.only(
+                        top: 8, bottom: 10, left: 20, right: 20),
+                    margin: EdgeInsets.only(
+                        left: 20, right: 20, top: 20, bottom: 20),
                     decoration: BoxDecoration(
                         color: Get.theme.primaryColor,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         boxShadow: [
-                          BoxShadow(color: Get.theme.focusColor.withOpacity(0.1), blurRadius: 10, offset: Offset(0, 5)),
+                          BoxShadow(
+                              color: Get.theme.focusColor.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: Offset(0, 5)),
                         ],
-                        border: Border.all(color: Get.theme.focusColor.withOpacity(0.05))),
+                        border: Border.all(
+                            color: Get.theme.focusColor.withOpacity(0.05))),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -301,17 +460,25 @@ class SalonFormView extends GetView<SalonFormController> {
                             ),
                             MaterialButton(
                               onPressed: () async {
-                                final selectedValues = await showDialog<Set<User>>(
+                                final selectedValues =
+                                    await showDialog<Set<User>>(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return MultiSelectDialog(
                                       title: "Select Employees".tr,
                                       submitText: "Submit".tr,
                                       cancelText: "Cancel".tr,
-                                      items: controller.getMultiSelectEmployeesItems(),
-                                      initialSelectedValues: controller.employees
+                                      items: controller
+                                          .getMultiSelectEmployeesItems(),
+                                      initialSelectedValues: controller
+                                          .employees
                                           .where(
-                                            (user) => controller.salon.value.employees?.where((element) => element.id == user.id).isNotEmpty ?? false,
+                                            (user) =>
+                                                controller.salon.value.employees
+                                                    ?.where((element) =>
+                                                        element.id == user.id)
+                                                    .isNotEmpty ??
+                                                false,
                                           )
                                           .toSet(),
                                     );
@@ -322,8 +489,10 @@ class SalonFormView extends GetView<SalonFormController> {
                                 });
                               },
                               shape: StadiumBorder(),
-                              color: Get.theme.colorScheme.secondary.withOpacity(0.1),
-                              child: Text("Select".tr, style: Get.textTheme.titleMedium),
+                              color: Get.theme.colorScheme.secondary
+                                  .withOpacity(0.1),
+                              child: Text("Select".tr,
+                                  style: Get.textTheme.titleMedium),
                               elevation: 0,
                               hoverElevation: 0,
                               focusElevation: 0,
@@ -332,7 +501,8 @@ class SalonFormView extends GetView<SalonFormController> {
                           ],
                         ),
                         Obx(() {
-                          if (controller.salon.value.employees?.isEmpty ?? true) {
+                          if (controller.salon.value.employees?.isEmpty ??
+                              true) {
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 20),
                               child: Text(
@@ -348,15 +518,21 @@ class SalonFormView extends GetView<SalonFormController> {
                     ),
                   ),
                 Container(
-                  padding: EdgeInsets.only(top: 8, bottom: 10, left: 20, right: 20),
-                  margin: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+                  padding:
+                      EdgeInsets.only(top: 8, bottom: 10, left: 20, right: 20),
+                  margin:
+                      EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
                   decoration: BoxDecoration(
                       color: Get.theme.primaryColor,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       boxShadow: [
-                        BoxShadow(color: Get.theme.focusColor.withOpacity(0.1), blurRadius: 10, offset: Offset(0, 5)),
+                        BoxShadow(
+                            color: Get.theme.focusColor.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: Offset(0, 5)),
                       ],
-                      border: Border.all(color: Get.theme.focusColor.withOpacity(0.05))),
+                      border: Border.all(
+                          color: Get.theme.focusColor.withOpacity(0.05))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -378,10 +554,16 @@ class SalonFormView extends GetView<SalonFormController> {
                                     title: "Select Taxes".tr,
                                     submitText: "Submit".tr,
                                     cancelText: "Cancel".tr,
-                                    items: controller.getMultiSelectTaxesItems(),
+                                    items:
+                                        controller.getMultiSelectTaxesItems(),
                                     initialSelectedValues: controller.taxes
                                         .where(
-                                          (tax) => controller.salon.value.taxes?.where((element) => element.id == tax.id).isNotEmpty ?? false,
+                                          (tax) =>
+                                              controller.salon.value.taxes
+                                                  ?.where((element) =>
+                                                      element.id == tax.id)
+                                                  .isNotEmpty ??
+                                              false,
                                         )
                                         .toSet(),
                                   );
@@ -392,8 +574,10 @@ class SalonFormView extends GetView<SalonFormController> {
                               });
                             },
                             shape: StadiumBorder(),
-                            color: Get.theme.colorScheme.secondary.withOpacity(0.1),
-                            child: Text("Select".tr, style: Get.textTheme.titleMedium),
+                            color: Get.theme.colorScheme.secondary
+                                .withOpacity(0.1),
+                            child: Text("Select".tr,
+                                style: Get.textTheme.titleMedium),
                             elevation: 0,
                             hoverElevation: 0,
                             focusElevation: 0,
@@ -434,7 +618,9 @@ class SalonFormView extends GetView<SalonFormController> {
             final _user = _salon.employees!.elementAt(index);
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              child: Text(_user.name, style: Get.textTheme.bodyLarge?.merge(TextStyle(color: Get.theme.colorScheme.secondary))),
+              child: Text(_user.name,
+                  style: Get.textTheme.bodyLarge?.merge(
+                      TextStyle(color: Get.theme.colorScheme.secondary))),
               decoration: BoxDecoration(
                   color: Get.theme.colorScheme.secondary.withOpacity(0.2),
                   border: Border.all(
@@ -457,7 +643,9 @@ class SalonFormView extends GetView<SalonFormController> {
             final tax = _salon.taxes!.elementAt(index);
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              child: Text(tax.name, style: Get.textTheme.bodyLarge?.merge(TextStyle(color: Get.theme.colorScheme.secondary))),
+              child: Text(tax.name,
+                  style: Get.textTheme.bodyLarge?.merge(
+                      TextStyle(color: Get.theme.colorScheme.secondary))),
               decoration: BoxDecoration(
                   color: Get.theme.colorScheme.secondary.withOpacity(0.2),
                   border: Border.all(
@@ -474,8 +662,10 @@ class SalonFormView extends GetView<SalonFormController> {
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 4),
-        child: Text(_salon.salonLevel?.name ?? '', style: Get.textTheme.bodyMedium),
-        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
+        child: Text(_salon.salonLevel?.name ?? '',
+            style: Get.textTheme.bodyMedium),
+        decoration:
+            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
       ),
     );
   }
