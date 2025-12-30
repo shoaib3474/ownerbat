@@ -174,6 +174,9 @@ class BookingController extends GetxController {
   }
 
   String getTime({String separator = ":"}) {
+    if (booking.value.duration == null) {
+      return "00${separator}00";
+    }
     String hours = "";
     String minutes = "";
     int minutesInt = ((booking.value.duration! - booking.value.duration!.toInt()) * 60).toInt();
