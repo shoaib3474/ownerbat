@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 /*
  * File name: main_drawer_widget.dart
  * Last modified: 2023.02.09 at 15:52:46
@@ -30,17 +32,17 @@ class MainDrawerWidget extends StatelessWidget {
                   Get.toNamed(Routes.LOGIN);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 15),
                   decoration: BoxDecoration(
                     color: Theme.of(context).hintColor.withOpacity(0.1),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Welcome".tr, style: Get.textTheme.headlineSmall?.merge(TextStyle(color: Get.theme.colorScheme.secondary))),
-                      SizedBox(height: 5),
-                      Text("Login account or create new one for free".tr, style: Get.textTheme.bodyLarge),
-                      SizedBox(height: 15),
+                      Text('Welcome'.tr, style: Get.textTheme.headlineSmall?.merge(TextStyle(color: Get.theme.colorScheme.secondary))),
+                      const SizedBox(height: 5),
+                      Text('Login account or create new one for free'.tr, style: Get.textTheme.bodyLarge),
+                      const SizedBox(height: 15),
                       Wrap(
                         spacing: 10,
                         children: <Widget>[
@@ -51,6 +53,7 @@ class MainDrawerWidget extends StatelessWidget {
                             color: Get.theme.colorScheme.secondary,
                             height: 40,
                             elevation: 0,
+                            shape: const StadiumBorder(),
                             child: Wrap(
                               runAlignment: WrapAlignment.center,
                               crossAxisAlignment: WrapCrossAlignment.center,
@@ -58,12 +61,11 @@ class MainDrawerWidget extends StatelessWidget {
                               children: [
                                 Icon(Icons.exit_to_app_outlined, color: Get.theme.primaryColor, size: 24),
                                 Text(
-                                  "Login".tr,
+                                  'Login'.tr,
                                   style: Get.textTheme.titleMedium?.merge(TextStyle(color: Get.theme.primaryColor)),
                                 ),
                               ],
                             ),
-                            shape: StadiumBorder(),
                           ),
                           MaterialButton(
                             color: Get.theme.focusColor.withOpacity(0.2),
@@ -72,6 +74,7 @@ class MainDrawerWidget extends StatelessWidget {
                             onPressed: () {
                               Get.toNamed(Routes.REGISTER);
                             },
+                            shape: const StadiumBorder(),
                             child: Wrap(
                               runAlignment: WrapAlignment.center,
                               crossAxisAlignment: WrapCrossAlignment.center,
@@ -79,12 +82,11 @@ class MainDrawerWidget extends StatelessWidget {
                               children: [
                                 Icon(Icons.person_add_outlined, color: Get.theme.hintColor, size: 24),
                                 Text(
-                                  "Register".tr,
+                                  'Register'.tr,
                                   style: Get.textTheme.titleMedium?.merge(TextStyle(color: Get.theme.hintColor)),
                                 ),
                               ],
                             ),
-                            shape: StadiumBorder(),
                           ),
                         ],
                       ),
@@ -115,7 +117,7 @@ class MainDrawerWidget extends StatelessWidget {
                         width: 80,
                         height: 80,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(80)),
+                          borderRadius: const BorderRadius.all(Radius.circular(80)),
                           child: CachedNetworkImage(
                             height: 80,
                             width: double.infinity,
@@ -127,7 +129,7 @@ class MainDrawerWidget extends StatelessWidget {
                               width: double.infinity,
                               height: 80,
                             ),
-                            errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                            errorWidget: (context, url, error) => const Icon(Icons.error_outline),
                           ),
                         ),
                       ),
@@ -136,7 +138,7 @@ class MainDrawerWidget extends StatelessWidget {
                         right: 0,
                         child: Get.find<AuthService>().user.value.verifiedPhone ?? false
                             ? Icon(Icons.check_circle, color: Get.theme.colorScheme.secondary, size: 24)
-                            : SizedBox(),
+                            : const SizedBox(),
                       )
                     ],
                   ),
@@ -144,11 +146,11 @@ class MainDrawerWidget extends StatelessWidget {
               );
             }
           }),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           if (Get.find<AuthService>().user.value.isSalonOwner)
             DrawerLinkWidget(
               icon: Icons.assignment_outlined,
-              text: "Bookings",
+              text: 'Bookings',
               onTap: (e) {
                 Get.back();
                 Get.find<RootController>().changePage(0);
@@ -156,21 +158,21 @@ class MainDrawerWidget extends StatelessWidget {
             ),
           DrawerLinkWidget(
             icon: Icons.folder_special_outlined,
-            text: "My Services",
+            text: 'My Services',
             onTap: (e) {
               Get.offAndToNamed(Routes.E_SERVICES);
             },
           ),
           DrawerLinkWidget(
             icon: Icons.build_circle_outlined,
-            text: "My Salons",
+            text: 'My Salons',
             onTap: (e) {
               Get.offAndToNamed(Routes.SALONS);
             },
           ),
           DrawerLinkWidget(
             icon: Icons.notifications_none_outlined,
-            text: "Notifications",
+            text: 'Notifications',
             onTap: (e) {
               Get.offAndToNamed(Routes.NOTIFICATIONS);
             },
@@ -178,18 +180,18 @@ class MainDrawerWidget extends StatelessWidget {
           if (Get.find<AuthService>().user.value.isSalonOwner)
             DrawerLinkWidget(
               icon: Icons.chat_outlined,
-              text: "Messages",
+              text: 'Messages',
               onTap: (e) {
                 Get.back();
                 Get.find<RootController>().changePage(2);
               },
             ),
           if (Get.find<AuthService>().user.value.isSalonOwner)
-            if (Get.find<SettingsService>().setting.value.modules!.contains("Subscription"))
+            if (Get.find<SettingsService>().setting.value.modules!.contains('Subscription'))
               ListTile(
                 dense: true,
                 title: Text(
-                  "Subscriptions & Payments".tr,
+                  'Subscriptions & Payments'.tr,
                   style: Get.textTheme.bodySmall,
                 ),
                 trailing: Icon(
@@ -198,28 +200,28 @@ class MainDrawerWidget extends StatelessWidget {
                 ),
               ),
           if (Get.find<AuthService>().user.value.isSalonOwner)
-            if (Get.find<SettingsService>().setting.value.modules!.contains("Subscription"))
+            if (Get.find<SettingsService>().setting.value.modules!.contains('Subscription'))
               DrawerLinkWidget(
                 icon: Icons.fact_check_outlined,
-                text: "Subscriptions History",
+                text: 'Subscriptions History',
                 onTap: (e) {
                   Get.offAndToNamed(Routes.SUBSCRIPTIONS);
                 },
               ),
           if (Get.find<AuthService>().user.value.isSalonOwner)
-            if (Get.find<SettingsService>().setting.value.modules!.contains("Subscription"))
+            if (Get.find<SettingsService>().setting.value.modules!.contains('Subscription'))
               DrawerLinkWidget(
                 icon: Icons.auto_awesome_mosaic_outlined,
-                text: "Subscription Packages",
+                text: 'Subscription Packages',
                 onTap: (e) {
                   Get.offAndToNamed(Routes.PACKAGES);
                 },
               ),
           if (Get.find<AuthService>().user.value.isSalonOwner)
-            if (Get.find<SettingsService>().setting.value.modules!.contains("Subscription"))
+            if (Get.find<SettingsService>().setting.value.modules!.contains('Subscription'))
               DrawerLinkWidget(
                 icon: Icons.account_balance_wallet_outlined,
-                text: "Wallets",
+                text: 'Wallets',
                 onTap: (e) async {
                   await Get.offAndToNamed(Routes.WALLETS);
                 },
@@ -227,7 +229,7 @@ class MainDrawerWidget extends StatelessWidget {
           ListTile(
             dense: true,
             title: Text(
-              "Application preferences".tr,
+              'Application preferences'.tr,
               style: Get.textTheme.bodySmall,
             ),
             trailing: Icon(
@@ -238,7 +240,7 @@ class MainDrawerWidget extends StatelessWidget {
           if (Get.find<AuthService>().user.value.isSalonOwner)
             DrawerLinkWidget(
               icon: Icons.person_outline,
-              text: "Account",
+              text: 'Account',
               onTap: (e) {
                 Get.back();
                 Get.find<RootController>().changePage(3);
@@ -246,21 +248,21 @@ class MainDrawerWidget extends StatelessWidget {
             ),
           DrawerLinkWidget(
             icon: Icons.settings_outlined,
-            text: "Settings",
+            text: 'Settings',
             onTap: (e) {
               Get.offAndToNamed(Routes.SETTINGS);
             },
           ),
           DrawerLinkWidget(
             icon: Icons.translate_outlined,
-            text: "Languages",
+            text: 'Languages',
             onTap: (e) {
               Get.offAndToNamed(Routes.SETTINGS_LANGUAGE);
             },
           ),
           DrawerLinkWidget(
             icon: Icons.brightness_6_outlined,
-            text: Get.isDarkMode ? "Light Theme" : "Dark Theme",
+            text: Get.isDarkMode ? 'Light Theme' : 'Dark Theme',
             onTap: (e) {
               Get.offAndToNamed(Routes.SETTINGS_THEME_MODE);
             },
@@ -268,7 +270,7 @@ class MainDrawerWidget extends StatelessWidget {
           ListTile(
             dense: true,
             title: Text(
-              "Help & Privacy",
+              'Help & Privacy',
               style: Get.textTheme.bodySmall,
             ),
             trailing: Icon(
@@ -278,17 +280,17 @@ class MainDrawerWidget extends StatelessWidget {
           ),
           DrawerLinkWidget(
             icon: Icons.help_outline,
-            text: "Help & FAQ",
+            text: 'Help & FAQ',
             onTap: (e) {
               Get.offAndToNamed(Routes.HELP);
             },
           ),
-          if (Get.find<AuthService>().user.value.isSalonOwner) CustomPageDrawerLinkWidget(),
+          if (Get.find<AuthService>().user.value.isSalonOwner) const CustomPageDrawerLinkWidget(),
           Obx(() {
             if (Get.find<AuthService>().isAuth) {
               return DrawerLinkWidget(
                 icon: Icons.logout,
-                text: "Logout",
+                text: 'Logout',
                 onTap: (e) async {
                   await Get.find<AuthService>().removeCurrentUser();
                   await Get.offNamedUntil(Routes.LOGIN, (Route route) {
@@ -300,14 +302,14 @@ class MainDrawerWidget extends StatelessWidget {
                 },
               );
             } else {
-              return SizedBox(height: 0);
+              return const SizedBox(height: 0);
             }
           }),
           if (Get.find<SettingsService>().setting.value.enableVersion ?? false )
             ListTile(
               dense: true,
               title: Text(
-                "Version".tr + " " + (Get.find<SettingsService>().setting.value.appVersion ?? "1.0.0"),
+                '${'Version'.tr} ${Get.find<SettingsService>().setting.value.appVersion ?? '1.0.0'}',
                 style: Get.textTheme.bodySmall,
               ),
               trailing: Icon(
