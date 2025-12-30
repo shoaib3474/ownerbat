@@ -5,6 +5,7 @@
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
+import 'package:geolocator/geolocator.dart';
 
 class LocationService extends GetxService {
   /// Check if location permission is granted
@@ -48,5 +49,18 @@ class LocationService extends GetxService {
     ].request();
 
     return statuses;
+  }
+
+  /// Get the current location of the device
+  Future<Position?> getLocation() async {
+    try {
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      return position;
+    } catch (e) {
+      print('Error getting location: $e');
+      return null;
+    }
   }
 }

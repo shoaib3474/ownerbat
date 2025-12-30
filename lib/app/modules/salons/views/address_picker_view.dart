@@ -102,6 +102,35 @@ class AddressPickerController extends GetxController {
       ..description = formattedAddress.value; // Ensure description is set
   }
 
+  /// 📍 GET CURRENT LOCATION
+  Future<void> getCurrentLocation() async {
+    isLoading.value = true;
+    try {
+      final position = await _locationService.getLocation();
+      if (position != null) {
+        final latLng = gmap.LatLng(position.latitude, position.longitude);
+        selectedLatLng.value = latLng;
+        await reverseGeocode(latLng);
+      } else {
+        Get.showSnackbar(
+          GetSnackBar(
+            message: "Unable to get current location".tr,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      Get.showSnackbar(
+        GetSnackBar(
+          message: "Error getting location: ${e.toString()}".tr,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   /// 🔁 REVERSE GEOCODE
   Future<void> reverseGeocode(gmap.LatLng latLng) async {
     isLoading.value = true;
@@ -183,6 +212,50 @@ class AddressPickerView extends GetView<AddressPickerController> {
                 zoomControlsEnabled: false,
               )),
 
+          /// FLOATING ACTION BUTTONS (Top Right)
+          Positioned(
+            top: 16,
+            right: 16,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                /// CURRENT LOCATION FAB
+                Obx(
+                  () => FloatingActionButton(
+                    heroTag: "currentLocation",
+                    mini: true,
+                    backgroundColor: controller.isLoading.value
+                        ? Colors.grey
+                        : Get.theme.colorScheme.secondary,
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : () => controller.getCurrentLocation(),
+                    child: controller.isLoading.value
+                        ? SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation(Colors.white),
+                            ),
+                          )
+                        : const Icon(Icons.my_location, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                /// SEARCH FAB
+                FloatingActionButton(
+                  heroTag: "search",
+                  mini: true,
+                  backgroundColor: Get.theme.colorScheme.secondary,
+                  onPressed: _openSearchDialog,
+                  child: const Icon(Icons.search, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+
           /// BOTTOM PANEL (NO OVERFLOW)
           Align(
             alignment: Alignment.bottomCenter,
@@ -192,11 +265,79 @@ class AddressPickerView extends GetView<AddressPickerController> {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: Offset(0, -2),
+                    ),
+                  ],
                 ),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      /// LOCATION BUTTONS ROW
+                      Row(
+                        children: [
+                          /// CURRENT LOCATION BUTTON
+                          Expanded(
+                            child: Obx(() => ElevatedButton.icon(
+                                  onPressed: controller.isLoading.value
+                                      ? null
+                                      : () => controller.getCurrentLocation(),
+                                  icon: controller.isLoading.value
+                                      ? SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation(
+                                              Get.theme.primaryColor,
+                                            ),
+                                          ),
+                                        )
+                                      : const Icon(Icons.my_location),
+                                  label: Text("My Location".tr),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Get.theme.colorScheme.secondary,
+                                    foregroundColor: Colors.white,
+                                    elevation: 2,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                )),
+                          ),
+                          const SizedBox(width: 10),
+
+                          /// SEARCH BUTTON
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: _openSearchDialog,
+                              icon: const Icon(Icons.search),
+                              label: Text("Search".tr),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Get.theme.colorScheme.secondary,
+                                foregroundColor: Colors.white,
+                                elevation: 2,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      /// INPUT FIELDS
                       TextFieldWidget(
                         labelText: "Description".tr,
                         initialValue: controller.address.description,
@@ -214,9 +355,16 @@ class AddressPickerView extends GetView<AddressPickerController> {
                         isLast: true,
                       ),
                       const SizedBox(height: 12),
+
+                      /// PICK HERE BUTTON
                       BlockButtonWidget(
                         color: Get.theme.colorScheme.secondary,
-                        text: Text("Pick Here".tr),
+                        text: Text(
+                          "Pick Here".tr,
+                          style: Get.textTheme.titleMedium?.merge(
+                            const TextStyle(color: Colors.white),
+                          ),
+                        ),
                         onPressed: () async {
                           final addr = controller.address;
                           final formCtrl =
@@ -247,34 +395,91 @@ class AddressPickerView extends GetView<AddressPickerController> {
 
     Get.dialog(
       AlertDialog(
-        title: const Text("Search location"),
+        title: Text("Search location".tr),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         content: StatefulBuilder(
           builder: (_, setState) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              /// SEARCH INPUT
               TextField(
                 controller: ctrl,
+                decoration: InputDecoration(
+                  hintText: "Search for a place...".tr,
+                  prefixIcon: const Icon(Icons.location_on),
+                  suffixIcon: ctrl.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            ctrl.clear();
+                            setState(() => results.clear());
+                          },
+                        )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
                 onChanged: (v) async {
-                  results = await controller.search(v);
+                  if (v.isNotEmpty) {
+                    results = await controller.search(v);
+                  } else {
+                    results.clear();
+                  }
                   setState(() {});
                 },
               ),
-              SizedBox(
-                height: 300,
-                child: ListView.builder(
-                  itemCount: results.length,
-                  itemBuilder: (_, i) => ListTile(
-                    title: Text(results[i]['description']),
-                    onTap: () async {
-                      await controller.selectPlace(results[i]['place_id']);
-                      Get.back();
-                    },
+              const SizedBox(height: 12),
+
+              /// RESULTS LIST
+              if (results.isEmpty && ctrl.text.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "No results found".tr,
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                )
+              else if (results.isNotEmpty)
+                SizedBox(
+                  height: 300,
+                  child: ListView.builder(
+                    itemCount: results.length,
+                    itemBuilder: (_, i) => ListTile(
+                      leading: const Icon(Icons.location_on,
+                          color: Colors.grey, size: 18),
+                      title: Text(
+                        results[i]['description'],
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      onTap: () async {
+                        await controller.selectPlace(results[i]['place_id']);
+                        Get.back();
+                      },
+                    ),
+                  ),
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "Start typing to search locations...".tr,
+                    style: TextStyle(color: Colors.grey[500]),
                   ),
                 ),
-              ),
             ],
           ),
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text("Close".tr),
+          ),
+        ],
       ),
     );
   }
