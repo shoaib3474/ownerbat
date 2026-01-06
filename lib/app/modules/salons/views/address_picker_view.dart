@@ -29,6 +29,7 @@ class AddressPickerController extends GetxController {
   final Rx<gmap.LatLng> selectedLatLng =
       const gmap.LatLng(28.6139, 77.2090).obs;
 
+  final Completer<gmap.GoogleMapController> mapController = Completer();
   final RxString formattedAddress = ''.obs;
   final RxBool isLoading = false.obs;
   Timer? _debounce;
@@ -95,6 +96,9 @@ class AddressPickerController extends GetxController {
 
     selectedLatLng.value = gmap.LatLng(loc['lat'], loc['lng']);
 
+    final controller = await mapController.future;
+    controller.animateCamera(gmap.CameraUpdate.newLatLng(selectedLatLng.value));
+
     address
       ..latitude = loc['lat']
       ..longitude = loc['lng']
@@ -110,11 +114,13 @@ class AddressPickerController extends GetxController {
       if (position != null) {
         final latLng = gmap.LatLng(position.latitude, position.longitude);
         selectedLatLng.value = latLng;
+        final controller = await mapController.future;
+        controller.animateCamera(gmap.CameraUpdate.newLatLng(latLng));
         await reverseGeocode(latLng);
       } else {
         Get.showSnackbar(
           GetSnackBar(
-            message: "Unable to get current location".tr,
+            message: 'Unable to get current location'.tr,
             duration: const Duration(seconds: 2),
           ),
         );
@@ -122,7 +128,7 @@ class AddressPickerController extends GetxController {
     } catch (e) {
       Get.showSnackbar(
         GetSnackBar(
-          message: "Error getting location: ${e.toString()}".tr,
+          message: 'Error getting location: ${e.toString()}'.tr,
           duration: const Duration(seconds: 2),
         ),
       );
@@ -179,7 +185,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
       appBar: AppBar(
         title: Obx(() => Text(
               controller.formattedAddress.value.isEmpty
-                  ? "Pick Address".tr
+                  ? 'Pick Address'.tr
                   : controller.formattedAddress.value,
               overflow: TextOverflow.ellipsis,
             )),
@@ -198,13 +204,18 @@ class AddressPickerView extends GetView<AddressPickerController> {
                   target: controller.selectedLatLng.value,
                   zoom: 15,
                 ),
+                onMapCreated: (gmap.GoogleMapController mapCtrl) {
+                  if (!controller.mapController.isCompleted) {
+                    controller.mapController.complete(mapCtrl);
+                  }
+                },
                 onTap: (latLng) async {
                   controller.selectedLatLng.value = latLng;
                   await controller.reverseGeocode(latLng);
                 },
                 markers: {
                   gmap.Marker(
-                    markerId: const gmap.MarkerId("selected"),
+                    markerId: const gmap.MarkerId('selected'),
                     position: controller.selectedLatLng.value,
                   ),
                 },
@@ -222,7 +233,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                 /// CURRENT LOCATION FAB
                 Obx(
                   () => FloatingActionButton(
-                    heroTag: "currentLocation",
+                    heroTag: 'currentLocation',
                     mini: true,
                     backgroundColor: controller.isLoading.value
                         ? Colors.grey
@@ -231,7 +242,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                         ? null
                         : () => controller.getCurrentLocation(),
                     child: controller.isLoading.value
-                        ? SizedBox(
+                        ? const SizedBox(
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(
@@ -246,7 +257,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
 
                 /// SEARCH FAB
                 FloatingActionButton(
-                  heroTag: "search",
+                  heroTag: 'search',
                   mini: true,
                   backgroundColor: Get.theme.colorScheme.secondary,
                   onPressed: _openSearchDialog,
@@ -298,7 +309,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                                           ),
                                         )
                                       : const Icon(Icons.my_location),
-                                  label: Text("My Location".tr),
+                                  label: Text('My Location'.tr),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
                                         Get.theme.colorScheme.secondary,
@@ -319,7 +330,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                             child: ElevatedButton.icon(
                               onPressed: _openSearchDialog,
                               icon: const Icon(Icons.search),
-                              label: Text("Search".tr),
+                              label: Text('Search'.tr),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     Get.theme.colorScheme.secondary,
@@ -339,7 +350,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
 
                       /// INPUT FIELDS
                       TextFieldWidget(
-                        labelText: "Description".tr,
+                        labelText: 'Description'.tr,
                         initialValue: controller.address.description,
                         onChanged: (v) => controller.address.description = v,
                         iconData: Icons.description_outlined,
@@ -347,7 +358,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                         isLast: false,
                       ),
                       TextFieldWidget(
-                        labelText: "Full Address".tr,
+                        labelText: 'Full Address'.tr,
                         initialValue: controller.address.address,
                         onChanged: (v) => controller.address.address = v,
                         iconData: Icons.place_outlined,
@@ -360,7 +371,7 @@ class AddressPickerView extends GetView<AddressPickerController> {
                       BlockButtonWidget(
                         color: Get.theme.colorScheme.secondary,
                         text: Text(
-                          "Pick Here".tr,
+                          'Pick Here'.tr,
                           style: Get.textTheme.titleMedium?.merge(
                             const TextStyle(color: Colors.white),
                           ),
@@ -395,89 +406,92 @@ class AddressPickerView extends GetView<AddressPickerController> {
 
     Get.dialog(
       AlertDialog(
-        title: Text("Search location".tr),
+        title: Text('Search location'.tr),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         content: StatefulBuilder(
-          builder: (_, setState) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              /// SEARCH INPUT
-              TextField(
-                controller: ctrl,
-                decoration: InputDecoration(
-                  hintText: "Search for a place...".tr,
-                  prefixIcon: const Icon(Icons.location_on),
-                  suffixIcon: ctrl.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            ctrl.clear();
-                            setState(() => results.clear());
-                          },
-                        )
-                      : null,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+          builder: (_, setState) => SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                /// SEARCH INPUT
+                TextField(
+                  controller: ctrl,
+                  decoration: InputDecoration(
+                    hintText: 'Search for a place...'.tr,
+                    prefixIcon: const Icon(Icons.location_on),
+                    suffixIcon: ctrl.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              ctrl.clear();
+                              setState(() => results.clear());
+                            },
+                          )
+                        : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  onChanged: (v) async {
+                    if (v.isNotEmpty) {
+                      results = await controller.search(v);
+                    } else {
+                      results.clear();
+                    }
+                    setState(() {});
+                  },
                 ),
-                onChanged: (v) async {
-                  if (v.isNotEmpty) {
-                    results = await controller.search(v);
-                  } else {
-                    results.clear();
-                  }
-                  setState(() {});
-                },
-              ),
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              /// RESULTS LIST
-              if (results.isEmpty && ctrl.text.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    "No results found".tr,
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                )
-              else if (results.isNotEmpty)
-                SizedBox(
-                  height: 300,
-                  child: ListView.builder(
-                    itemCount: results.length,
-                    itemBuilder: (_, i) => ListTile(
-                      leading: const Icon(Icons.location_on,
-                          color: Colors.grey, size: 18),
-                      title: Text(
-                        results[i]['description'],
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 14),
+                /// RESULTS LIST
+                if (results.isNotEmpty)
+                  SizedBox(
+                    height: 300, // ✅ FIXED HEIGHT
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: results.length,
+                      itemBuilder: (_, i) => ListTile(
+                        leading: const Icon(Icons.location_on,
+                            color: Colors.grey, size: 18),
+                        title: Text(
+                          results[i]['description'],
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        onTap: () async {
+                          await controller.selectPlace(results[i]['place_id']);
+                          Get.back();
+                        },
                       ),
-                      onTap: () async {
-                        await controller.selectPlace(results[i]['place_id']);
-                        Get.back();
-                      },
+                    ),
+                  )
+                else if (ctrl.text.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      'No results found'.tr,
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      'Start typing to search locations...'.tr,
+                      style: TextStyle(color: Colors.grey[500]),
                     ),
                   ),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    "Start typing to search locations...".tr,
-                    style: TextStyle(color: Colors.grey[500]),
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text("Close".tr),
+            child: Text('Close'.tr),
           ),
         ],
       ),
