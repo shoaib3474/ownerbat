@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show WidgetsBinding;
 import 'package:get/get.dart';
 
 import '../../../../common/ui.dart';
@@ -23,7 +24,8 @@ class NotificationsController extends GetxController {
     await getNotifications();
     Get.find<RootController>().getNotificationsCount();
     if (showMessage == true) {
-      Get.showSnackbar(Ui.SuccessSnackBar(message: "List of notifications refreshed successfully".tr));
+      Get.showSnackbar(Ui.SuccessSnackBar(
+          message: "List of notifications refreshed successfully".tr));
     }
   }
 
@@ -41,7 +43,10 @@ class NotificationsController extends GetxController {
       if (!notification.read) {
         --Get.find<RootController>().notificationsCount.value;
       }
-      notifications.remove(notification);
+      // Defer the UI update to avoid setState during build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifications.remove(notification);
+      });
     } catch (e) {
       Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
     }
@@ -53,7 +58,10 @@ class NotificationsController extends GetxController {
         await _notificationRepository.markAsRead(notification);
         notification.read = true;
         --Get.find<RootController>().notificationsCount.value;
-        notifications.refresh();
+        // Defer the UI update to avoid setState during build
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          notifications.refresh();
+        });
       }
     } catch (e) {
       Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));

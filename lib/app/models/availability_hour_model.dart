@@ -43,12 +43,12 @@ class AvailabilityHour extends Model {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> map = Map<String, dynamic>();
-    if (this.hasData) map['id'] = this.id;
-    if (day != null) map['day'] = this.day;
-    if (startAt != null) map['start_at'] = this.startAt;
-    if (endAt != null) map['end_at'] = this.endAt;
-    if (data != null) map['data'] = this.data;
-    if (this.salon != null) map['salon_id'] = this.salon!.id;
+    if (hasData) map['id'] = id;
+    if (day != null) map['day'] = day;
+    if (startAt != null) map['start_at'] = startAt;
+    if (endAt != null) map['end_at'] = endAt;
+    if (data != null) map['data'] = data;
+    if (salon != null) map['salon_id'] = salon!.id;
     return map;
   }
 
@@ -62,13 +62,13 @@ class AvailabilityHour extends Model {
     _day = value;
   }
 
-  String? get startAt => _startAt  ?? '';
+  String? get startAt => _startAt ?? '';
 
   set startAt(String? value) {
     _startAt = value;
   }
 
-  String? get endAt => _endAt  ?? '' ;
+  String? get endAt => _endAt ?? '';
 
   set endAt(String? value) {
     _endAt = value;
@@ -86,7 +86,6 @@ class AvailabilityHour extends Model {
     _salon = value;
   }
 
-
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -101,5 +100,12 @@ class AvailabilityHour extends Model {
           salon == other.salon;
 
   @override
-  int get hashCode => super.hashCode ^ id.hashCode ^ day.hashCode ^ startAt.hashCode ^ endAt.hashCode ^ data.hashCode ^ salon.hashCode;
+  int get hashCode =>
+      super.hashCode ^
+      id.hashCode ^
+      day.hashCode ^
+      startAt.hashCode ^
+      endAt.hashCode ^
+      data.hashCode ^
+      salon.hashCode;
 }

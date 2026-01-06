@@ -33,7 +33,9 @@ class EServicesController extends GetxController {
   @override
   Future<void> onInit() async {
     scrollController.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !isDone.value) {
+      if (scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent &&
+          !isDone.value) {
         loadEServicesOfCategory(filter: selected.value);
       }
     });
@@ -50,7 +52,8 @@ class EServicesController extends GetxController {
     toggleSelected(selected.value);
     await loadEServicesOfCategory(filter: selected.value);
     if (showMessage == true) {
-      Get.showSnackbar(Ui.SuccessSnackBar(message: "List of services refreshed successfully".tr));
+      Get.showSnackbar(Ui.SuccessSnackBar(
+          message: "List of services refreshed successfully".tr));
     }
   }
 
@@ -74,19 +77,24 @@ class EServicesController extends GetxController {
       List<EService> _eServices = [];
       switch (filter) {
         case CategoryFilter.ALL:
-          _eServices = await _salonRepository.getEServices(page: this.page.value);
+          _eServices =
+              await _salonRepository.getEServices(page: this.page.value);
           break;
         case CategoryFilter.FEATURED:
-          _eServices = await _salonRepository.getFeaturedEServices(page: this.page.value);
+          _eServices = await _salonRepository.getFeaturedEServices(
+              page: this.page.value);
           break;
         case CategoryFilter.POPULAR:
-          _eServices = await _salonRepository.getPopularEServices(page: this.page.value);
+          _eServices =
+              await _salonRepository.getPopularEServices(page: this.page.value);
           break;
         case CategoryFilter.AVAILABILITY:
-          _eServices = await _salonRepository.getAvailableEServices(page: this.page.value);
+          _eServices = await _salonRepository.getAvailableEServices(
+              page: this.page.value);
           break;
         default:
-          _eServices = await _salonRepository.getEServices(page: this.page.value);
+          _eServices =
+              await _salonRepository.getEServices(page: this.page.value);
       }
       if (_eServices.isNotEmpty) {
         this.eServices.addAll(_eServices);
@@ -104,8 +112,12 @@ class EServicesController extends GetxController {
   void deleteEService(EService eService) async {
     try {
       await _eServiceRepository.delete(eService.id!);
-      eServices.remove(eService);
-      Get.showSnackbar(Ui.SuccessSnackBar(message: eService.name! + " " + "has been removed".tr));
+      // Defer the UI update to avoid setState during build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        eServices.remove(eService);
+      });
+      Get.showSnackbar(Ui.SuccessSnackBar(
+          message: eService.name! + " " + "has been removed".tr));
     } catch (e) {
       Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
     }

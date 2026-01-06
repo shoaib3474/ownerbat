@@ -47,7 +47,9 @@ class MessagesController extends GetxController {
     // await createMessage(new Message([_authService.user.value], id: UniqueKey().toString(), name: 'Shifting Home'));
     // await createMessage(new Message([_authService.user.value], id: UniqueKey().toString(), name: 'Pet Car Company'));
     scrollController.addListener(() async {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !isDone.value) {
+      if (scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent &&
+          !isDone.value) {
         await listenForMessages();
       }
     });
@@ -72,7 +74,10 @@ class MessagesController extends GetxController {
   }
 
   Future deleteMessage(Message _message) async {
-    messages.remove(_message);
+    // Defer the UI update to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      messages.remove(_message);
+    });
     await _chatRepository.deleteMessage(_message);
   }
 
@@ -87,9 +92,11 @@ class MessagesController extends GetxController {
     isDone.value = false;
     Stream<QuerySnapshot> _userMessages;
     if (lastDocument.value == null) {
-      _userMessages = _chatRepository.getUserMessages(_authService.user.value.id);
+      _userMessages =
+          _chatRepository.getUserMessages(_authService.user.value.id);
     } else {
-      _userMessages = _chatRepository.getUserMessagesStartAt(_authService.user.value.id, lastDocument.value!);
+      _userMessages = _chatRepository.getUserMessagesStartAt(
+          _authService.user.value.id, lastDocument.value!);
     }
     _userMessages.listen((QuerySnapshot query) {
       if (query.docs.isNotEmpty) {
@@ -113,7 +120,8 @@ class MessagesController extends GetxController {
   }
 
   addMessage(Message _message, String text) {
-    Chat _chat = new Chat(text, DateTime.now().millisecondsSinceEpoch, _authService.user.value.id, _authService.user.value);
+    Chat _chat = new Chat(text, DateTime.now().millisecondsSinceEpoch,
+        _authService.user.value.id, _authService.user.value);
     if (!_message.hasData) {
       _message.id = UniqueKey().toString();
       createMessage(_message);
@@ -126,7 +134,8 @@ class MessagesController extends GetxController {
       List<User> _users = [];
       _users.addAll(_message.users);
       _users.removeWhere((element) => element.id == _authService.user.value.id);
-      _notificationRepository.sendNotification(_users, _authService.user.value, "App\\Notifications\\NewMessage", text, _message.id);
+      _notificationRepository.sendNotification(_users, _authService.user.value,
+          "App\\Notifications\\NewMessage", text, _message.id);
     });
   }
 
@@ -145,7 +154,8 @@ class MessagesController extends GetxController {
         Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
       }
     } else {
-      Get.showSnackbar(Ui.ErrorSnackBar(message: "Please select an image file".tr));
+      Get.showSnackbar(
+          Ui.ErrorSnackBar(message: "Please select an image file".tr));
     }
   }
 }

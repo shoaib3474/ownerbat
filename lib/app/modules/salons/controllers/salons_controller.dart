@@ -31,7 +31,9 @@ class SalonsController extends GetxController {
   @override
   Future<void> onInit() async {
     scrollController.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !isDone.value) {
+      if (scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent &&
+          !isDone.value) {
         loadSalonsOfFilter(filter: selected.value);
       }
     });
@@ -48,7 +50,8 @@ class SalonsController extends GetxController {
     toggleSelected(selected.value);
     await loadSalonsOfFilter(filter: selected.value);
     if (showMessage == true) {
-      Get.showSnackbar(Ui.SuccessSnackBar(message: "List of services refreshed successfully".tr));
+      Get.showSnackbar(Ui.SuccessSnackBar(
+          message: "List of services refreshed successfully".tr));
     }
   }
 
@@ -75,13 +78,16 @@ class SalonsController extends GetxController {
           _salons = await _salonRepository.getSalons(page: this.page.value);
           break;
         case SalonFilter.ACCEPTED:
-          _salons = await _salonRepository.getAcceptedSalons(page: this.page.value);
+          _salons =
+              await _salonRepository.getAcceptedSalons(page: this.page.value);
           break;
         case SalonFilter.FEATURED:
-          _salons = await _salonRepository.getFeaturedSalons(page: this.page.value);
+          _salons =
+              await _salonRepository.getFeaturedSalons(page: this.page.value);
           break;
         case SalonFilter.PENDING:
-          _salons = await _salonRepository.getPendingSalons(page: this.page.value);
+          _salons =
+              await _salonRepository.getPendingSalons(page: this.page.value);
           break;
         default:
           _salons = await _salonRepository.getSalons(page: this.page.value);
@@ -102,8 +108,12 @@ class SalonsController extends GetxController {
   void deleteSalon(Salon salon) async {
     try {
       await _salonRepository.delete(salon);
-      salons.remove(salon);
-      Get.showSnackbar(Ui.SuccessSnackBar(message: salon.name! + " " + "has been removed".tr));
+      // Defer the UI update to avoid setState during build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        salons.remove(salon);
+      });
+      Get.showSnackbar(Ui.SuccessSnackBar(
+          message: salon.name! + " " + "has been removed".tr));
     } catch (e) {
       Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
     }
