@@ -18,7 +18,6 @@ import 'tax_model.dart';
 import 'user_model.dart';
 
 class Salon extends Model {
-
   String? _name;
   String? _description;
   List<Media>? _images;
@@ -84,8 +83,10 @@ class Salon extends Model {
     _images = mediaListFromJson(json, 'images');
     _phoneNumber = stringFromJson(json, 'phone_number');
     _mobileNumber = stringFromJson(json, 'mobile_number');
-    _salonLevel = objectFromJson(json, 'salon_level', (v) => SalonLevel.fromJson(v));
-    _availabilityHours = listFromJson(json, 'availability_hours', (v) => AvailabilityHour.fromJson(v));
+    _salonLevel =
+        objectFromJson(json, 'salon_level', (v) => SalonLevel.fromJson(v));
+    _availabilityHours = listFromJson(
+        json, 'availability_hours', (v) => AvailabilityHour.fromJson(v));
     _availabilityRange = doubleFromJson(json, 'availability_range');
     _distance = doubleFromJson(json, 'distance');
     _closed = boolFromJson(json, 'closed');
@@ -96,7 +97,9 @@ class Salon extends Model {
     _rate = doubleFromJson(json, 'rate');
     _reviews = listFromJson(json, 'salon_reviews', (v) => Review.fromJson(v));
     if (reviews != null) {
-      _totalReviews = reviews!.isEmpty ? intFromJson(json, 'total_reviews') : reviews!.length;
+      _totalReviews = reviews!.isEmpty
+          ? intFromJson(json, 'total_reviews')
+          : reviews!.length;
     }
     _verified = boolFromJson(json, 'verified');
   }
@@ -211,42 +214,48 @@ class Salon extends Model {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.hasData) data['id'] = this.id;
-    if (name != null) data['name'] = this.name;
-    if (description != null) data['description'] = this.description;
-    if (closed != null) data['closed'] = this.closed;
-    if (phoneNumber != null) data['phone_number'] = this.phoneNumber;
-    if (mobileNumber != null) data['mobile_number'] = this.mobileNumber;
-    if (rate != null) data['rate'] = this.rate;
-    if (totalReviews != null) data['total_reviews'] = this.totalReviews;
-    if (verified != null) data['verified'] = this.verified;
-    if (distance != null) data['distance'] = this.distance;
-    if (this.salonLevel != null) {
-      data['salon_level_id'] = this.salonLevel!.id;
+    if (hasData) data['id'] = id;
+    if (name != null) data['name'] = name;
+    if (description != null) data['description'] = description;
+    if (closed != null) data['closed'] = closed;
+    if (phoneNumber != null) data['phone_number'] = phoneNumber;
+    if (mobileNumber != null) data['mobile_number'] = mobileNumber;
+    if (rate != null) data['rate'] = rate;
+    if (totalReviews != null) data['total_reviews'] = totalReviews;
+    if (verified != null) data['verified'] = verified;
+    if (distance != null) data['distance'] = distance;
+    if (salonLevel != null) {
+      data['salon_level_id'] = salonLevel!.id;
     }
-    if (this.images != null) {
-      data['image'] = this.images!.where((element) => Uuid.isUuid(element.id!)).map((v) => v.id).toList();
+    if (images != null) {
+      data['image'] = images!
+          .where((element) => Uuid.isUuid(element.id))
+          .map((v) => v.id)
+          .toList();
     }
-    if (this.address != null) {
-      data['address_id'] = this.address!.id;
+    if (address != null) {
+      data['address_id'] = address!.id;
     }
-    if (this.employees != null) {
-      data['employees'] = this.employees!.map((v) => v.id).toList();
+    if (employees != null) {
+      data['employees'] = employees!.map((v) => v.id).toList();
     }
-    if (this.taxes != null) {
-      data['taxes'] = this.taxes!.map((v) => v.id).toList();
+    if (taxes != null) {
+      data['taxes'] = taxes!.map((v) => v.id).toList();
     }
-    if (this.availabilityRange != null) {
+    if (availabilityRange != null) {
       data['availability_range'] = availabilityRange;
     }
     return data;
   }
 
-  String get firstImageUrl => this.images?.first.url ?? '';
+  String get firstImageUrl =>
+      (images?.isNotEmpty ?? false) ? images!.first.url ?? '' : '';
 
-  String get firstImageThumb => this.images?.first.thumb ?? '';
+  String get firstImageThumb =>
+      (images?.isNotEmpty ?? false) ? images!.first.thumb ?? '' : '';
 
-  String get firstImageIcon => this.images?.first.icon ?? '';
+  String get firstImageIcon =>
+      (images?.isNotEmpty ?? false) ? images!.first.icon ?? '' : '';
 
   @override
   bool get hasData {
@@ -255,7 +264,7 @@ class Salon extends Model {
 
   Map<String, List<AvailabilityHour>> groupedAvailabilityHours() {
     Map<String, List<AvailabilityHour>> result = {};
-    this.availabilityHours!.forEach((element) {
+    availabilityHours!.forEach((element) {
       if (result.containsKey(element.day)) {
         result[element.day]!.add(element);
       } else {
@@ -267,7 +276,7 @@ class Salon extends Model {
 
   List<String> getAvailabilityHoursData(String day) {
     List<String> result = [];
-    this.availabilityHours!.forEach((element) {
+    availabilityHours!.forEach((element) {
       if (element.day == day) {
         result.add(element.data!);
       }
@@ -277,7 +286,9 @@ class Salon extends Model {
 
   @override
   bool operator ==(dynamic other) =>
-      identical(this, other) || super == other && other is Salon &&
+      identical(this, other) ||
+      super == other &&
+          other is Salon &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           name == other.name &&

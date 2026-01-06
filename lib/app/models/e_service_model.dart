@@ -64,7 +64,6 @@ class EService extends Model {
     this._salon = salon;
   }
 
-
   EService.fromJson(Map<String, dynamic>? json) {
     super.fromJson(json);
     _name = transStringFromJson(json, 'name');
@@ -78,9 +77,12 @@ class EService extends Model {
     _enableAtSalon = boolFromJson(json, 'enable_at_salon');
     _enableAtCustomerAddress = boolFromJson(json, 'enable_at_customer_address');
     _isFavorite = boolFromJson(json, 'is_favorite');
-    _categories = listFromJson<Category>(json, 'categories', (value) => Category.fromJson(value));
-    _subCategories = listFromJson<Category>(json, 'sub_categories', (value) => Category.fromJson(value));
-    _optionGroups = listFromJson<OptionGroup>(json, 'option_groups', (value) => OptionGroup.fromJson(value, eServiceId: id));
+    _categories = listFromJson<Category>(
+        json, 'categories', (value) => Category.fromJson(value));
+    _subCategories = listFromJson<Category>(
+        json, 'sub_categories', (value) => Category.fromJson(value));
+    _optionGroups = listFromJson<OptionGroup>(json, 'option_groups',
+        (value) => OptionGroup.fromJson(value, eServiceId: id));
     _salon = objectFromJson(json, 'salon', (value) => Salon.fromJson(value));
   }
 
@@ -98,7 +100,11 @@ class EService extends Model {
     data['enable_at_customer_address'] = this.enableAtCustomerAddress ?? false;
     data['is_favorite'] = this.isFavorite;
     data['categories'] = this.categories.map((v) => v.id).toList();
-    data['image'] = this.images.where((element) => Uuid.isUuid(element.id)).map((v) => v.id).toList();
+    data['image'] = this
+        .images
+        .where((element) => Uuid.isUuid(element.id))
+        .map((v) => v.id)
+        .toList();
     data['sub_categories'] = this.subCategories.map((v) => v.toJson()).toList();
     data['option_groups'] = this.optionGroups.map((v) => v.toJson()).toList();
     if (this.salon.hasData) {
@@ -107,11 +113,14 @@ class EService extends Model {
     return data;
   }
 
-  String get firstImageUrl => this.images.first.url ?? '';
+  String get firstImageUrl =>
+      this.images.isNotEmpty ? this.images.first.url ?? '' : '';
 
-  String get firstImageThumb => this.images.first.thumb ?? '';
+  String get firstImageThumb =>
+      this.images.isNotEmpty ? this.images.first.thumb ?? '' : '';
 
-  String get firstImageIcon => this.images.first.icon ?? '';
+  String get firstImageIcon =>
+      this.images.isNotEmpty ? this.images.first.icon ?? '' : '';
 
   @override
   bool get hasData {
@@ -133,7 +142,6 @@ class EService extends Model {
   double get getOldPrice {
     return (discountPrice ?? 0) > 0 ? price : 0;
   }
-
 
   List<Media> get images => _images ?? [];
 

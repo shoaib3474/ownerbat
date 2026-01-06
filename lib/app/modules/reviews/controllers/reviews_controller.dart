@@ -36,7 +36,11 @@ class ReviewsController extends GetxController {
     try {
       reviews.assignAll(await _salonRepository.getReviews());
       totalReviews.value = reviews.length;
-      rate.value = reviews.map((element) => element.rate).reduce((value, element) => value + element) / reviews.length;
+      if (reviews.isNotEmpty) {
+        rate.value = reviews.map((element) => element.rate).reduce((value, element) => value + element) / reviews.length;
+      } else {
+        rate.value = 0.0;
+      }
     } catch (e) {
       Get.showSnackbar(Ui.ErrorSnackBar(message: e.toString()));
     }

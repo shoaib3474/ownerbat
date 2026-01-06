@@ -235,7 +235,7 @@ class OptionsFormView extends GetView<OptionsFormController> {
                                       orElse: () =>
                                           controller.optionGroups.isNotEmpty
                                               ? controller.optionGroups.first
-                                              : new OptionGroup(),
+                                              : OptionGroup(),
                                     ),
                                   );
                                 },
@@ -262,11 +262,11 @@ class OptionsFormView extends GetView<OptionsFormController> {
                           (element) =>
                               element.id ==
                               controller.option.value.optionGroupId,
-                          orElse: () => controller.optionGroups.isNotEmpty
+                          orElse: () => (controller.optionGroups.isNotEmpty
                               ? controller.optionGroups.first
-                              : OptionGroup(),
+                              : OptionGroup()),
                         );
-                        return buildOptionGroup(selectedOptionGroup.name);
+                        return buildOptionGroup(selectedOptionGroup.name ?? '');
                       })
                     ],
                   ),

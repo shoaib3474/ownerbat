@@ -33,7 +33,10 @@ class CheckoutController extends GetxController {
     salonSubscription.value = Get.arguments as SalonSubscription;
     await loadPaymentMethodsList();
     await loadWalletList();
-    selectedPaymentMethod.value = this.paymentsList.firstWhere((element) => element.isDefault);
+    if (this.paymentsList.isNotEmpty) {
+      final defaultMethod = this.paymentsList.firstWhereOrNull((element) => element.isDefault);
+      selectedPaymentMethod.value = defaultMethod ?? this.paymentsList.first;
+    }
     super.onInit();
   }
 

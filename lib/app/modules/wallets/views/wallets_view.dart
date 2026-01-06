@@ -75,30 +75,40 @@ class WalletsView extends GetView<WalletsController> {
                             return WalletBalanceCard(
                               wallet: controller.wallets.elementAt(index),
                               onTap: (wallet) async {
-                                controller.walletTransactions.clear();
+                                // Defer the UI update to avoid setState during build
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  controller.walletTransactions.clear();
+                                });
                                 controller.selectedWallet.value = wallet;
                                 await controller.getWalletTransactions();
                               },
                               onEdit: (wallet) async {
-                                await Get.offAndToNamed(Routes.WALLET_FORM, arguments: {'wallet': wallet});
+                                await Get.offAndToNamed(Routes.WALLET_FORM,
+                                    arguments: {'wallet': wallet});
                               },
                             );
                           });
                     }),
                   ),
-                  Text("Wallet Transactions".tr, style: Get.textTheme.headlineSmall).paddingOnly(top: 25, bottom: 10, right: 22, left: 22),
+                  Text("Wallet Transactions".tr,
+                          style: Get.textTheme.headlineSmall)
+                      .paddingOnly(top: 25, bottom: 10, right: 22, left: 22),
                   Obx(() {
                     if (controller.walletTransactions.isEmpty) {
                       return WalletTransactionsLoadingListWidget();
                     }
                     return ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 8),
                         primary: false,
                         shrinkWrap: true,
                         itemCount: controller.walletTransactions.length,
                         itemBuilder: (_, index) {
-                          WalletTransaction _transaction = controller.walletTransactions.elementAt(index);
-                          return WalletTransactionItem(transaction: _transaction);
+                          WalletTransaction _transaction =
+                              controller.walletTransactions.elementAt(index);
+                          return WalletTransactionItem(
+                              transaction: _transaction);
                         });
                   }),
                 ],

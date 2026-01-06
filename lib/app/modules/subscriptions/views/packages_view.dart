@@ -139,7 +139,9 @@ class PackagesView extends GetView<PackagesController> {
                 );
               else if (controller.salons.length == 1) {
                 controller.salonSubscription.value.salon =
-                    controller.salons.first;
+                    controller.salons.isNotEmpty
+                        ? controller.salons.first
+                        : null;
                 return SizedBox();
               } else {
                 return SubscriptionsListLoaderWidget(count: 1, itemHeight: 130)

@@ -362,7 +362,9 @@ class EServiceFormView extends GetView<EServiceFormController> {
                       ),
                     );
                   else if (controller.salons.length == 1) {
-                    controller.eService.value.salon = controller.salons.first;
+                    if (controller.salons.isNotEmpty) {
+                      controller.eService.value.salon = controller.salons.first;
+                    }
                     return SizedBox();
                   } else {
                     return SizedBox();
