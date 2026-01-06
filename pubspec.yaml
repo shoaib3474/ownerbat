@@ -84,6 +84,14 @@ dev_dependencies:
   # WINDOWS SUPPORT
   win32: 5.5.4
 
+
+  # Launcher Icons
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path_android: "assets/icon/icon.png"
+  image_path_ios: "assets/icon/icon.png"
+
 flutter:
   uses-material-design: true
 
